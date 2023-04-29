@@ -10,6 +10,13 @@ import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 
 
+def validate_suffix(suffix):
+    support_suffix = [".png", ".pdf", ".jpg", "jpeg", ".bmp", ".tiff", ".gif", ".svg", ".eps"]
+    if suffix not in support_suffix:
+        return False
+    return True
+
+
 def plot_clustering_tsne(args, embedding, label, logger, img_suffix=".PDF",
                          axis_show=True, title="TSNE", legend_show=True):
     """
@@ -24,8 +31,7 @@ def plot_clustering_tsne(args, embedding, label, logger, img_suffix=".PDF",
     :param legend_show: whether to display the legend of the image, default value is True
     :return:
     """
-    support_suffix = [".png", ".pdf", ".jpg", "jpeg", ".bmp", ".tiff", ".gif", ".svg", ".eps"]
-    if support_suffix not in support_suffix:
+    if not validate_suffix(img_suffix):
         logger.error("The suffix is not supported!")
         return
     clustering_tsne_filename = args.clustering_tsne_save_path + args.dataset_name + img_suffix
@@ -40,4 +46,34 @@ def plot_clustering_tsne(args, embedding, label, logger, img_suffix=".PDF",
         plt.legend()
     plt.savefig(clustering_tsne_filename)
     logger.info("==========绘图结束==========")
-    logger.info("The .pdf image was saved to: " + clustering_tsne_filename)
+    logger.info("The clustering tsne visualization image was saved to: " + clustering_tsne_filename)
+
+
+def plot_embedding_heatmap(args, embedding, logger, img_suffix=".PDF",
+                           axis_show=True, title="Heatmap", color_bar_show=True):
+    """
+    :param args: the parameter settings of model
+    :param embedding: the embedded representations will be drawn which were learned by model
+    :param logger: the logger to record information during the process
+    :param img_suffix: the suffix of image
+            '.png','.pdf','.jpg','.jpeg','.bmp','.tiff','.gif','.svg', '.eps' are available
+    :param axis_show: is show the axis of image
+    :param title: the title of image, default value is "HeatMap", if needn't, set it to None
+    :param color_bar_show: whether to display the color bar of the image, default value is True
+    :return:
+    """
+    if not validate_suffix(img_suffix):
+        logger.error("The suffix is not supported!")
+        return
+    clustering_tsne_filename = args.clustering_tsne_save_path + args.dataset_name + img_suffix
+    logger.info("==========正在绘图==========")
+    plt.imshow(embedding.cpu().detach().numpy(), cmap=plt.cm.GnBu, interpolation='nearest')
+    if color_bar_show:
+        plt.colorbar()
+    if not axis_show:
+        plt.axis("off")
+    if title is not None:
+        plt.title(title)
+    plt.savefig(clustering_tsne_filename)
+    logger.info("==========绘图结束==========")
+    logger.info("The embedding heatmap image was saved to: " + clustering_tsne_filename)
