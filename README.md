@@ -8,7 +8,7 @@ Recently, attribute graph clustering has developed rapidly, at the same time var
 
 Thanks for the open source of these authors (not listed in order):
 
-\[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Tiger101010](https://github.com/Tiger101010)\]
+\[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Tiger101010](https://github.com/Tiger101010) | [ZhihaoPENG-CityU](https://github.com/ZhihaoPENG-CityU)\]
 
 ## Introduction
 
@@ -95,10 +95,11 @@ python main.py --model_name SDCN --dataset_name acm
 
 ## Support Models Currently
 
-| No.  |   Model   |                            Paper                             |                           Analysis                           |                 Source Code                  |
-| :--: | :-------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :------------------------------------------: |
-|  1   | **DAEGC** | [《Attributed Graph Clustering:  <br> A Deep Attentional Embedding Approach》](https://arxiv.org/pdf/1906.06532.pdf) | [论文阅读02](https://www.marigold.website/readArticle?workId=102&author=Marigold&authorId=1000001) | [link](https://github.com/Tiger101010/DAEGC) |
-|  2   | **SDCN**  | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) | [论文阅读03](https://www.marigold.website/readArticle?workId=103&author=Marigold&authorId=1000001) |   [link](https://github.com/bdy9527/SDCN)    |
+| No.  |   Model   |                            Paper                             |                           Analysis                           |                       Source Code                       |
+| :--: | :-------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
+|  1   | **DAEGC** | [《Attributed Graph Clustering:  <br> A Deep Attentional Embedding Approach》](https://arxiv.org/pdf/1906.06532.pdf) | [论文阅读02](https://www.marigold.website/readArticle?workId=102&author=Marigold&authorId=1000001) |      [link](https://github.com/Tiger101010/DAEGC)       |
+|  2   | **SDCN**  | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) | [论文阅读03](https://www.marigold.website/readArticle?workId=103&author=Marigold&authorId=1000001) |         [link](https://github.com/bdy9527/SDCN)         |
+|  3   | **AGCN**  | [《Attention-driven Graph Clustering Network》](https://arxiv.org/pdf/2108.05499.pdf) | [论文阅读04](https://www.marigold.website/readArticle?workId=105&author=Marigold&authorId=1000001) | [link](https://github.com/ZhihaoPENG-CityU/MM21---AGCN) |
 
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
 

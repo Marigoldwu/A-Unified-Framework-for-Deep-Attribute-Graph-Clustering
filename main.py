@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # Sometimes when faced with many experimental result files, we don't remember which experiment it was.
     # So, join me in forming the habit of recording the key points of the experiment!
     # Describe the key points of this experiment in brief words. You can record whatever you want to!
-    description = "复现SDCN"
+    description = "统计参数量和模型耗时"
     root_path = "/content/Drive/MyDrive"
     """
     long model_name for copy conveniently:
@@ -38,8 +38,8 @@ if __name__ == "__main__":
     parser.add_argument("--plot_clustering_tsne", type=bool, default=False)
     parser.add_argument("--plot_embedding_heatmap", type=bool, default=False)
     args = parser.parse_args()
-    args = dataset_info.get_dataset_info(args.dataset_name, args)
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
+    args = dataset_info.get_dataset_info(args.dataset_name, args)
     args = path_manager.get_abs_path(args, root_path)
 
     # Configuration of logger and timer module.

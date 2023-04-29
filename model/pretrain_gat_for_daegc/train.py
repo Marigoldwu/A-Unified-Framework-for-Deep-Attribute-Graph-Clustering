@@ -27,7 +27,7 @@ def train(args, feature, label, adj, logger):
                 embedding_size=args.embedding_size,
                 alpha=args.alpha).to(args.device)
     logger.info(model)
-    optimizer = Adam(model.parameters(), args.lr)
+    optimizer = Adam(model.parameters(), args.pretrain_lr)
 
     M = data_processor.get_M(adj, args.t).to(args.device)
 
@@ -38,7 +38,7 @@ def train(args, feature, label, adj, logger):
 
     acc_max = 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
-    for epoch in range(1, args.pretrain_epochs + 1):
+    for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
         A_pred, _ = model(data, adj, M)
         loss = F.binary_cross_entropy(A_pred.view(-1), adj_label.view(-1))
