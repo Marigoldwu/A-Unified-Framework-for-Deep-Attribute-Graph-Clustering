@@ -1,6 +1,6 @@
 # A-Unified-Framework-for-Deep-Attribute-Graph-Clustering
 
-See the Chinese version in \[[Marigold博客](https://www.marigold.website/readArticle?workId=145&author=Marigold&authorId=1000001)\]
+See the Chinese version in \[[Marigold](https://www.marigold.website/readArticle?workId=145&author=Marigold&authorId=1000001)\]
 
 Recently, attribute graph clustering has developed rapidly, at the same time various deep attribute graph clustering methods have sprung up. Although most of the methods are open source, it is a pity that these codes do not have a unified framework, which makes researchers have to spend a lot of time modifying the code to achieve the purpose of reproduction. Fortunately, Liu et al. \[Homepage: [yueliu1999](https://github.com/yueliu1999)\] organized the deep graph clustering method into a code warehouse—— [ Awesome-Deep-Graph-Clustering(ADGC)](https://github.com/yueliu1999/Awesome-Deep-Graph-Clustering). For example, they provided more than 20 datasets and unified the format. Moreover, they list the most related paper about deep graph clustering  and give the link of source code. It is worth mentioning that they organize the code of deep graph clustering into rand-augmentation-model-clustering-visualization-utils structure, which greatly facilitates beginners and researchers. Here, on behalf of myself, I would like to express my sincere thanks and high respect to Liu et al. ❤️
 
