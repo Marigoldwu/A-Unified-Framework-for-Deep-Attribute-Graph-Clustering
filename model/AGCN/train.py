@@ -61,7 +61,7 @@ def train(args, feature, label, adj, logger):
     kmeans.fit_predict(z.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).cuda()
 
-    p, acc_max, pred = 0, 0, 0
+    p, acc_max, embedding = 0, 0, 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch + 1):
         if epoch % args.update_interval == 0:
@@ -81,7 +81,7 @@ def train(args, feature, label, adj, logger):
                                                        ari="{:0>.4f}".format(ari),
                                                        f1="{:0>.4f}".format(f1)))
 
-        x_bar, q, pred, _, _ = model(feature, adj)
+        x_bar, q, pred, _, embedding = model(feature, adj)
 
         kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
         ce_loss = F.kl_div(pred.log(), p, reduction='batchmean')
@@ -92,4 +92,4 @@ def train(args, feature, label, adj, logger):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-    return pred, acc_max_corresponding_metrics
+    return embedding, acc_max_corresponding_metrics
