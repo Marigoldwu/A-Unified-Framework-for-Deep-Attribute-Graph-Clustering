@@ -25,14 +25,14 @@ def train(args, feature, label, adj, logger):
     args.dec_1_dim = 2000
     args.dec_2_dim = 500
     args.dec_3_dim = 500
+    pretrain_ae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
 
     model = SDCN(input_dim=args.input_dim, embedding_dim=args.embedding_dim,
                  enc_1_dim=args.enc_1_dim, enc_2_dim=args.enc_2_dim, enc_3_dim=args.enc_3_dim,
                  dec_1_dim=args.dec_1_dim, dec_2_dim=args.dec_2_dim, dec_3_dim=args.dec_3_dim,
                  clusters=args.clusters,
                  v=1).to(args.device)
-    pretrain_ae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
-
+    logger.info(model)
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
 
     model.ae.load_state_dict(torch.load(pretrain_ae_filename, map_location='cpu'))

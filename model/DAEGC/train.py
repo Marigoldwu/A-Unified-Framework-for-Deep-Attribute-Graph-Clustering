@@ -14,6 +14,7 @@ from model.DAEGC.model import DAEGC
 from utils import data_processor, formatter
 from sklearn.cluster import KMeans
 from utils.evaluation import eva
+from utils.parameter_counter import count_parameters
 
 
 def train(args, feature, label, adj, logger):
@@ -22,10 +23,10 @@ def train(args, feature, label, adj, logger):
     args.alpha = 0.2
     args.weight_decay = 5e-3
     pretrain_gae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
-
     model = DAEGC(num_features=args.input_dim, hidden_size=args.hidden_size,
                   embedding_size=args.embedding_size, alpha=args.alpha, num_clusters=args.clusters).to(args.device)
     logger.info(model)
+    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
 
     model.gat.load_state_dict(torch.load(pretrain_gae_filename, map_location='cpu'))
 
