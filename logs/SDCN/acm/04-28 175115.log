@@ -1,0 +1,58 @@
+The key points of this experiment: 复现SDCN
+Namespace(clustering_tsne_save_path='./img/clustering/SDCN/acm/', clusters=3, dataset_name='acm', dataset_path='./', device='cuda', feature_heatmap_save_path='./img/heatmap/SDCN/acm/', input_dim=1870, is_change_root_path=False, is_pretrain=False, k=None, log_save_path='./logs/SDCN/acm/', loops=1, lr=0.001, max_epoch=50, model_name='SDCN', plot_clustering_tsne=False, plot_embedding_heatmap=False, pretrain_epochs=30, pretrain_save_path='./pretrain/pretrain_ae/SDCN/acm/', t=2, update_interval=1)
+Training loop No.1
+epoch: 001		acc: 0.5507		nmi: 0.2172		ari: 0.2077		f1: 0.5238		
+epoch: 002		acc: 0.5831		nmi: 0.3357		ari: 0.2701		f1: 0.5367		
+epoch: 003		acc: 0.6873		nmi: 0.3412		ari: 0.3308		f1: 0.6679		
+epoch: 004		acc: 0.6579		nmi: 0.4058		ari: 0.3788		f1: 0.5791		
+epoch: 005		acc: 0.6585		nmi: 0.4256		ari: 0.4094		f1: 0.5440		
+epoch: 006		acc: 0.5927		nmi: 0.3590		ari: 0.3179		f1: 0.5577		
+epoch: 007		acc: 0.7293		nmi: 0.4504		ari: 0.4101		f1: 0.7223		
+epoch: 008		acc: 0.7739		nmi: 0.5082		ari: 0.4843		f1: 0.7685		
+epoch: 009		acc: 0.8268		nmi: 0.5569		ari: 0.5693		f1: 0.8260		
+epoch: 010		acc: 0.8400		nmi: 0.5667		ari: 0.5976		f1: 0.8382		
+epoch: 011		acc: 0.8552		nmi: 0.5909		ari: 0.6252		f1: 0.8555		
+epoch: 012		acc: 0.8585		nmi: 0.5947		ari: 0.6311		f1: 0.8590		
+epoch: 013		acc: 0.8555		nmi: 0.5915		ari: 0.6290		f1: 0.8545		
+epoch: 014		acc: 0.8628		nmi: 0.6021		ari: 0.6414		f1: 0.8630		
+epoch: 015		acc: 0.8658		nmi: 0.6058		ari: 0.6482		f1: 0.8660		
+epoch: 016		acc: 0.8552		nmi: 0.5868		ari: 0.6286		f1: 0.8538		
+epoch: 017		acc: 0.8602		nmi: 0.5979		ari: 0.6370		f1: 0.8601		
+epoch: 018		acc: 0.8582		nmi: 0.5978		ari: 0.6326		f1: 0.8583		
+epoch: 019		acc: 0.8436		nmi: 0.5743		ari: 0.6052		f1: 0.8425		
+epoch: 020		acc: 0.8456		nmi: 0.5690		ari: 0.6075		f1: 0.8445		
+epoch: 021		acc: 0.8493		nmi: 0.5739		ari: 0.6130		f1: 0.8490		
+epoch: 022		acc: 0.8417		nmi: 0.5681		ari: 0.5997		f1: 0.8409		
+epoch: 023		acc: 0.8344		nmi: 0.5584		ari: 0.5861		f1: 0.8333		
+epoch: 024		acc: 0.8423		nmi: 0.5665		ari: 0.6004		f1: 0.8416		
+epoch: 025		acc: 0.8460		nmi: 0.5696		ari: 0.6071		f1: 0.8453		
+epoch: 026		acc: 0.8403		nmi: 0.5609		ari: 0.5966		f1: 0.8393		
+epoch: 027		acc: 0.8440		nmi: 0.5658		ari: 0.6036		f1: 0.8430		
+epoch: 028		acc: 0.8499		nmi: 0.5746		ari: 0.6145		f1: 0.8496		
+epoch: 029		acc: 0.8476		nmi: 0.5687		ari: 0.6098		f1: 0.8470		
+epoch: 030		acc: 0.8443		nmi: 0.5624		ari: 0.6038		f1: 0.8432		
+epoch: 031		acc: 0.8473		nmi: 0.5661		ari: 0.6087		f1: 0.8466		
+epoch: 032		acc: 0.8479		nmi: 0.5671		ari: 0.6099		f1: 0.8474		
+epoch: 033		acc: 0.8423		nmi: 0.5588		ari: 0.5991		f1: 0.8415		
+epoch: 034		acc: 0.8446		nmi: 0.5617		ari: 0.6035		f1: 0.8439		
+epoch: 035		acc: 0.8466		nmi: 0.5670		ari: 0.6076		f1: 0.8461		
+epoch: 036		acc: 0.8433		nmi: 0.5628		ari: 0.6015		f1: 0.8425		
+epoch: 037		acc: 0.8443		nmi: 0.5643		ari: 0.6031		f1: 0.8437		
+epoch: 038		acc: 0.8420		nmi: 0.5615		ari: 0.5989		f1: 0.8413		
+epoch: 039		acc: 0.8400		nmi: 0.5578		ari: 0.5948		f1: 0.8392		
+epoch: 040		acc: 0.8426		nmi: 0.5642		ari: 0.6002		f1: 0.8421		
+epoch: 041		acc: 0.8426		nmi: 0.5636		ari: 0.6002		f1: 0.8420		
+epoch: 042		acc: 0.8380		nmi: 0.5554		ari: 0.5916		f1: 0.8368		
+epoch: 043		acc: 0.8476		nmi: 0.5706		ari: 0.6094		f1: 0.8473		
+epoch: 044		acc: 0.8347		nmi: 0.5506		ari: 0.5853		f1: 0.8333		
+epoch: 045		acc: 0.8397		nmi: 0.5606		ari: 0.5952		f1: 0.8387		
+epoch: 046		acc: 0.8483		nmi: 0.5719		ari: 0.6108		f1: 0.8480		
+epoch: 047		acc: 0.8337		nmi: 0.5486		ari: 0.5837		f1: 0.8321		
+epoch: 048		acc: 0.8374		nmi: 0.5557		ari: 0.5903		f1: 0.8363		
+epoch: 049		acc: 0.8469		nmi: 0.5710		ari: 0.6079		f1: 0.8468		
+epoch: 050		acc: 0.8347		nmi: 0.5484		ari: 0.5850		f1: 0.8332		
+Time assuming: 15.57s or 0.26m
+Total loops: 1
+Mean value:
+acc: 0.8658±0.0000		nmi: 0.6058±0.0000		ari: 0.6482±0.0000		f1: 0.8660±0.0000
+Training over! Punch out!

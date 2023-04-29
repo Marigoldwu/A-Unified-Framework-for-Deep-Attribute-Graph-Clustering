@@ -1,0 +1,89 @@
+# -*- coding: utf-8 -*-
+"""
+@Time: 2023/4/28 9:11 
+@Author: Marigold
+@Version: 0.0.0
+@Description：
+@WeChat Account: Marigold
+"""
+import os
+
+
+def replace_relative_path(relative_path, root_path):
+    return relative_path.replace(".", root_path, 1)
+
+
+def get_abs_path(args, root_path):
+    pretrain_type_list = []
+    if args.is_pretrain:
+        model_name_list = args.model_name.split("_")
+        pretrain_type = model_name_list[0] + "_" + model_name_list[1]
+        pretrain_for = (model_name_list[-1]).upper()
+    else:
+        pretrain_type_dict = {"DAEGC": ["pretrain_gat"],
+                              "SDCN": ["pretrain_ae"],
+                              "AGCN": ["pretrain_ae"],
+                              "GSEECN": ["pretrain_ae", "pretrain_gat"],
+                              "DFCN": []}
+        pretrain_for = args.model_name
+        pretrain_type_list = pretrain_type_dict[args.model_name]
+        if len(pretrain_type_list) == 1:
+            pretrain_type = pretrain_type_list[0]
+        elif len(pretrain_type_list) == 0:
+            pretrain_type = "none"
+        else:
+            pretrain_type = "multi"
+            for i in range(len(pretrain_type_list)):
+                type_name = pretrain_type_list[i].split("_")[-1]
+                exec(f"args.pretrain_{type_name}_save_path = "
+                     f"'./pretrain/pretrain_{type_name}/' + {pretrain_for} + '/' + {args.dataset_name} +'/'")
+
+    directory_structure = args.model_name + "/" + args.dataset_name + "/"
+    args.log_save_path = "./logs/" + directory_structure
+    args.dataset_path = "./"
+    args.clustering_tsne_save_path = "./img/clustering/" + directory_structure
+    args.feature_heatmap_save_path = "./img/heatmap/" + directory_structure
+
+    if pretrain_type == "pretrain_ae":
+        args.pretrain_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_gae":
+        args.pretrain_save_path = "./pretrain/pretrain_gae/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_gat":
+        args.pretrain_save_path = "./pretrain/pretrain_gat/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "none":
+        args.pretrain_save_path = ""
+    elif pretrain_type == "multi":
+        pass
+    else:
+        print("The pretrain type error!"
+              "Please check the pretrain type name or complete the if-elif above with your type!")
+
+    if args.is_change_root_path:
+        args.log_save_path = replace_relative_path(args.log_save_path, root_path)
+        args.dataset_path = replace_relative_path(args.dataset_path, root_path)
+        args.clustering_tsne_save_path = replace_relative_path(args.clustering_tsne_save_path, root_path)
+        args.feature_heatmap_save_path = replace_relative_path(args.feature_heatmap_save_path, root_path)
+        if pretrain_type == "multi":
+            for i in range(len(pretrain_type_list)):
+                type_name = pretrain_type_list[i].split("_")[-1]
+                exec(f"args.pretrain_{type_name}_save_path = "
+                     f"replace_relative_path(args.pretrain_{type_name}_save_path, root_path)")
+        elif pretrain_type != "none":
+            args.pretrain_save_path = replace_relative_path(args.pretrain_save_path, root_path)
+    if not os.path.exists(args.log_save_path):
+        os.makedirs(args.log_save_path)
+    if not os.path.exists(args.dataset_path):
+        os.makedirs(args.dataset_path)
+    if not os.path.exists(args.clustering_tsne_save_path):
+        os.makedirs(args.clustering_tsne_save_path)
+    if not os.path.exists(args.feature_heatmap_save_path):
+        os.makedirs(args.feature_heatmap_save_path)
+    if pretrain_type == "multi":
+        for i in range(len(pretrain_type_list)):
+            type_name = pretrain_type_list[i].split("_")[-1]
+            if not os.path.exists(f"args.pretrain_{type_name}_save_path"):
+                exec(f"os.makedirs(args.pretrain_{type_name}_save_path)")
+    elif pretrain_type != "none":
+        if not os.path.exists(args.pretrain_save_path):
+            os.makedirs(args.pretrain_save_path)
+    return args
