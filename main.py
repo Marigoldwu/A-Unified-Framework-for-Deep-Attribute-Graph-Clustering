@@ -35,7 +35,7 @@ if __name__ == "__main__":
     parser.add_argument("--update_interval", type=int, default=1)
     parser.add_argument("--loops", type=int, default=1)
     parser.add_argument("--is_change_root_path", type=bool, default=False)
-    parser.add_argument("--plot_clustering_tsne", type=bool, default=True)
+    parser.add_argument("--plot_clustering_tsne", type=bool, default=False)
     parser.add_argument("--plot_embedding_heatmap", type=bool, default=False)
     args = parser.parse_args()
     args = dataset_info.get_dataset_info(args.dataset_name, args)
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         if args.plot_clustering_tsne:
             plot.plot_clustering_tsne(args, embedding, label, logger)
         if args.plot_embedding_heatmap:
-            pass
+            plot.plot_embedding_heatmap(args, embedding, logger)
         seconds, minutes = timer.stop()
         logger.info("Time assuming: {}s or {}m".format(seconds, minutes))
 
