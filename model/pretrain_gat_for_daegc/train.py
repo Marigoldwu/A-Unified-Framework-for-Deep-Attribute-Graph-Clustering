@@ -29,12 +29,12 @@ def train(args, feature, label, adj, logger):
     logger.info(model)
     optimizer = Adam(model.parameters(), args.lr)
 
-    M = data_processor.get_M(adj, args.t).cuda()
+    M = data_processor.get_M(adj, args.t).to(args.device)
 
-    adj = data_processor.numpy_to_torch(adj).cuda().float()
+    adj = data_processor.numpy_to_torch(adj).to(args.device).float()
     adj_label = adj
 
-    data = data_processor.numpy_to_torch(feature).cuda().float()
+    data = data_processor.numpy_to_torch(feature).to(args.device).float()
 
     acc_max = 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
