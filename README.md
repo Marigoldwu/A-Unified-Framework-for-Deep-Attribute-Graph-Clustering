@@ -12,6 +12,10 @@ Thanks for the open source of these authors (not listed in order):
 
 <img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999" width="48" height="48"/> <img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527" width="48" height="48"/> <img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu" width="48" height="48"/> <img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG" width="48" height="48"/> <img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu" width="48" height="48"/>
 
+
+
+<a href="https://github.com/yueliu1999"><img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999" width="48" height="48"/> </a>
+
 ## Introduction
 
 On the basis of ADGC, I refactored the code to make the deep clustering code achieve a higher level of unification. Specifically, I redesigned the architecture of the code, so that you can run the open source code easily. I defined some tool classes and functions to simplify the code and make the settings' configuration clear.  
