@@ -10,7 +10,7 @@ Thanks for the open source of these authors (not listed in order):
 
 \[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Liam Liu](https://github.com/Tiger101010) | [Zhihao PENG](https://github.com/ZhihaoPENG-CityU) | [William Zhu](https://github.com/grcai)\]
 
-<img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999"/> <img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527"/>  <img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu"/> <img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG"/> <img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu"/>
+<img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999"/> <img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527"/>  <img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu"/> <img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG"/> <img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu" width="24" height="24"/>
 
 ## Introduction
 
