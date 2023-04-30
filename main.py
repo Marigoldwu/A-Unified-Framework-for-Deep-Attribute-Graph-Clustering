@@ -75,7 +75,7 @@ if __name__ == "__main__":
         if args.plot_embedding_heatmap:
             plot.plot_embedding_heatmap(args, embedding, logger)
         seconds, minutes = timer.stop()
-        logger.info("Time assuming: {}s or {}m".format(seconds, minutes))
+        logger.info("Time consuming: {}s or {}m".format(seconds, minutes))
 
     logger.info("Total loops: {}".format(args.loops))
     logger.info("Mean value:")
