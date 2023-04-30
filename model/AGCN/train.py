@@ -61,16 +61,26 @@ def train(args, feature, label, adj, logger):
     kmeans.fit_predict(z.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).cuda()
 
-    p, acc_max, embedding = 0, 0, 0
+    acc_max, embedding = 0, 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch + 1):
-        if epoch % args.update_interval == 0:
-            _, tmp_q, pred, _, _ = model(feature, adj)
-            tmp_q = tmp_q.data
-            p = target_distribution(tmp_q)
+        model.train()
+        x_bar, q, pred, _, embedding = model(feature, adj)
+        p = target_distribution(q.data)
 
-            y_pred = pred.data.cpu().numpy().argmax(1)  # Z
+        kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
+        ce_loss = F.kl_div(pred.log(), p, reduction='batchmean')
+        re_loss = F.mse_loss(x_bar, feature)
+        loss = lambda_1 * kl_loss + lambda_2 * ce_loss + re_loss
 
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        with torch.no_grad():
+            model.eval()
+            _, _, pred, _, _ = model(feature, adj)
+            y_pred = pred.data.cpu().numpy().argmax(1)
             acc, nmi, ari, f1 = eva(label, y_pred)
             if acc > acc_max:
                 acc_max = acc
@@ -80,18 +90,6 @@ def train(args, feature, label, adj, logger):
                                                        nmi="{:0>.4f}".format(nmi),
                                                        ari="{:0>.4f}".format(ari),
                                                        f1="{:0>.4f}".format(f1)))
-
-        x_bar, q, pred, _, embedding = model(feature, adj)
-
-        kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
-        ce_loss = F.kl_div(pred.log(), p, reduction='batchmean')
-        re_loss = F.mse_loss(x_bar, feature)
-
-        loss = lambda_1 * kl_loss + lambda_2 * ce_loss + re_loss
-
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     return embedding, acc_max_corresponding_metrics

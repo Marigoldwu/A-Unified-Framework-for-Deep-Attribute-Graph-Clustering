@@ -55,12 +55,12 @@ class SDCN(nn.Module):
         h2 = self.gnn_2(((1 - sigma) * h1 + sigma * tra1), adj)
         h3 = self.gnn_3(((1 - sigma) * h2 + sigma * tra2), adj)
         h4 = self.gnn_4(((1 - sigma) * h3 + sigma * tra3), adj)
-        h5 = self.gnn_5(((1 - sigma) * h4 + sigma * z), adj)
-        predict = F.softmax(h5, dim=1)
+        embedding = self.gnn_5(((1 - sigma) * h4 + sigma * z), adj)
+        predict = F.softmax(embedding, dim=1)
 
         # Dual Self-supervised Module
         q = 1.0 / (1.0 + torch.sum(torch.pow(z.unsqueeze(1) - self.cluster_layer, 2), 2) / self.v)
         q = q.pow((self.v + 1.0) / 2.0)
         q = (q.t() / torch.sum(q, 1)).t()
 
-        return x_bar, q, predict, z
+        return x_bar, q, predict, z, embedding

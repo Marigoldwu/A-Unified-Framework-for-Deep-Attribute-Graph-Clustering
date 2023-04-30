@@ -1,6 +1,7 @@
 /logs/**
 /img/**
 /pretrain/**
+*.npy
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

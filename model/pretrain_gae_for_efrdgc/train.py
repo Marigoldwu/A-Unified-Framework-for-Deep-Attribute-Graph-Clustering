@@ -49,6 +49,7 @@ def train(args, feature, label, adj, logger):
         scheduler.step()
 
         with torch.no_grad():
+            model.eval()
             A_pred, r = model(data, adj, M, 0, 0, 0, 0)
             kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(r.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(label, kmeans.labels_)

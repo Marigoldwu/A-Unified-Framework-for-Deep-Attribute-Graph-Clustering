@@ -147,10 +147,10 @@ class AGCN(nn.Module):
         tile_u4 = u4.repeat(1, 10)
 
         net_output = torch.cat((tile_u0.mul(z1), tile_u1.mul(z2), tile_u2.mul(z3), tile_u3.mul(z4), tile_u4.mul(z)), 1)
-        net_output = self.agcn_z(net_output, adj)
-        predict = F.softmax(net_output, dim=1)
+        embedding = self.agcn_z(net_output, adj)
+        predict = F.softmax(embedding, dim=1)
         q = 1.0 / (1.0 + torch.sum(torch.pow(z.unsqueeze(1) - self.cluster_layer, 2), 2) / self.v)
         q = q.pow((self.v + 1.0) / 2.0)
         q = (q.t() / torch.sum(q, 1)).t()
 
-        return x_bar, q, predict, z, net_output
+        return x_bar, q, predict, z, embedding

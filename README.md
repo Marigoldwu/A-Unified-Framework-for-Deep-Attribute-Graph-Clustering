@@ -87,7 +87,6 @@ python main.py --model_name SDCN --dataset_name acm
 |     --dataset\_name      | The dataset you want to train. <br> **Should** correspond to the dataset name in the dataset directory. | str  |   acm   |
 |           --k            | For graph dataset, it is set to None. <br> If the dataset is not graph type, <br> you should set k to construct '**KNN**' graph of dataset. | int  |  None   |
 |           --t            | If the model need to get the matrix M, such as DAEGC, <br> you should set t according to the paper. | int  |    2    |
-|    --update_interval     |                     The update interval.                     | int  |    1    |
 |         --loops          | The training times. If you want to train the model <br> for 10 times, you can set it to 10. | int  |    1    |
 |  --is\_change_root_path  | If you need to change the relative path to the <br> absolute path,  you can set it to True. <br> **Note that** it just a flag, the root path <br> should be changed manually in the main.py. Then the <br> programmer will auto change all the path. | bool |  False  |
 | --plot\_clustering\_tsne | If you want to draw the clustering result with scatter, <br> you can set it to True. **Note that** don't use it in <br>multiple loops, or you can only get the last loop result. | bool |  False  |

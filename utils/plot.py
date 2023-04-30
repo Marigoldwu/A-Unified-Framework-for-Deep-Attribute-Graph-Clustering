@@ -17,8 +17,8 @@ def validate_suffix(suffix):
     return True
 
 
-def plot_clustering_tsne(args, embedding, label, logger, img_suffix=".PDF",
-                         axis_show=True, title="TSNE", legend_show=True):
+def plot_clustering_tsne(args, embedding, label, logger, img_suffix=".pdf",
+                         axis_show=True, title="TSNE"):
     """
     :param args: the parameter settings of model
     :param embedding: the embedded representations will be drawn which were learned by model
@@ -28,28 +28,25 @@ def plot_clustering_tsne(args, embedding, label, logger, img_suffix=".PDF",
             '.png','.pdf','.jpg','.jpeg','.bmp','.tiff','.gif','.svg', '.eps' are available
     :param axis_show: is show the axis of image
     :param title: the title of image, default value is "TSNE", if needn't, set it to None
-    :param legend_show: whether to display the legend of the image, default value is True
     :return:
     """
     if not validate_suffix(img_suffix):
-        logger.error("The suffix is not supported!")
+        logger.error("The suffix is not supported! Skip drawing!")
         return
     clustering_tsne_filename = args.clustering_tsne_save_path + args.dataset_name + img_suffix
-    logger.info("==========Start of Drawing==========")
+    logger.info("==========Start Drawing TSNE==========")
     X_tsne = TSNE(n_components=2, learning_rate='auto', init='random').fit_transform(embedding.cpu().detach().numpy())
     plt.scatter(X_tsne[:, 0], X_tsne[:, 1], s=5, c=label)
     if not axis_show:
         plt.axis("off")
     if title is not None:
         plt.title(title)
-    if legend_show:
-        plt.legend()
     plt.savefig(clustering_tsne_filename)
-    logger.info("===========End of Drawing===========")
+    logger.info("===========End Drawing TSNE===========")
     logger.info("The clustering tsne visualization image was saved to: " + clustering_tsne_filename)
 
 
-def plot_embedding_heatmap(args, embedding, logger, img_suffix=".PDF",
+def plot_embedding_heatmap(args, embedding, logger, img_suffix=".pdf",
                            axis_show=True, title="Heatmap", color_bar_show=True):
     """
     :param args: the parameter settings of model
@@ -63,10 +60,10 @@ def plot_embedding_heatmap(args, embedding, logger, img_suffix=".PDF",
     :return:
     """
     if not validate_suffix(img_suffix):
-        logger.error("The suffix is not supported!")
+        logger.error("The suffix is not supported! Skip drawing!")
         return
     clustering_tsne_filename = args.clustering_tsne_save_path + args.dataset_name + img_suffix
-    logger.info("==========Start of Drawing==========")
+    logger.info("==========Start Drawing Heatmap==========")
     plt.imshow(embedding.cpu().detach().numpy(), cmap=plt.cm.GnBu, interpolation='nearest')
     if color_bar_show:
         plt.colorbar()
@@ -75,5 +72,5 @@ def plot_embedding_heatmap(args, embedding, logger, img_suffix=".PDF",
     if title is not None:
         plt.title(title)
     plt.savefig(clustering_tsne_filename)
-    logger.info("===========End of Drawing===========")
+    logger.info("===========End Drawing Heatmap===========")
     logger.info("The embedding heatmap image was saved to: " + clustering_tsne_filename)

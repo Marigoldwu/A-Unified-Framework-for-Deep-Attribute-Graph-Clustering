@@ -46,6 +46,7 @@ def train(args, feature, label, adj, logger):
     acc_max = 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.pretrain_epoch + 1):
+        model.train()
         for batch_idx, (x, _) in enumerate(train_loader):
             x = x.to(args.device)
             x_bar, _, _, _, _ = model(x)
@@ -55,6 +56,7 @@ def train(args, feature, label, adj, logger):
             optimizer.step()
 
         with torch.no_grad():
+            model.eval()
             x = data_processor.numpy_to_torch(feature).to(args.device).float()
             x_bar, _, _, _, z = model(x)
             kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z.data.cpu().numpy())

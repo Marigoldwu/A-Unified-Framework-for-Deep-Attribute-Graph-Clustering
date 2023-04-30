@@ -70,27 +70,12 @@ def train(args, feature, label, adj, logger):
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
     # training
-    p, acc_max = 0, 0
+    acc_max = 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch+1):
         model.train()
-        if epoch % args.update_interval == 0:
-            A_pred, z, tmp_q, x_bar = model(feature, adj, M, args.sigma)
-            tmp_q = tmp_q.data
-            p = data_processor.target_distribution(tmp_q)
-            y_pred = tmp_q.cpu().numpy().argmax(1)
-            acc, nmi, ari, f1 = eva(label, y_pred)
-            # record the max value
-            if acc > acc_max:
-                acc_max = acc
-                acc_max_corresponding_metrics = [acc, nmi, ari, f1]
-            logger.info(formatter.get_format_variables(epoch="{:0>3d}".format(epoch),
-                                                       acc="{:0>.4f}".format(acc),
-                                                       nmi="{:0>.4f}".format(nmi),
-                                                       ari="{:0>.4f}".format(ari),
-                                                       f1="{:0>.4f}".format(f1)))
-
         A_pred, z, q, x_bar = model(feature, adj, M)
+        p = data_processor.target_distribution(q.data)
 
         kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
         re_loss_gae = F.binary_cross_entropy(A_pred.view(-1), adj_label.view(-1))
@@ -101,6 +86,21 @@ def train(args, feature, label, adj, logger):
         loss.backward()
         optimizer.step()
         scheduler.step()
+
+        with torch.no_grad():
+            model.eval()
+            _, _, pred, _ = model(feature, adj, M, args.sigma)
+            y_pred = pred.cpu().numpy().argmax(1)
+            acc, nmi, ari, f1 = eva(label, y_pred)
+            # record the max value
+            if acc > acc_max:
+                acc_max = acc
+                acc_max_corresponding_metrics = [acc, nmi, ari, f1]
+            logger.info(formatter.get_format_variables(epoch="{:0>3d}".format(epoch),
+                                                       acc="{:0>.4f}".format(acc),
+                                                       nmi="{:0>.4f}".format(nmi),
+                                                       ari="{:0>.4f}".format(ari),
+                                                       f1="{:0>.4f}".format(f1)))
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     return z, acc_max_corresponding_metrics

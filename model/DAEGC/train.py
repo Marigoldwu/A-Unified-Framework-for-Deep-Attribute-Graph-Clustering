@@ -49,16 +49,25 @@ def train(args, feature, label, adj, logger):
     kmeans.fit_predict(z.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
-    Q = 0
     acc_max = 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch + 1):
         model.train()
-        if epoch % args.update_interval == 0:
-            # update_interval
-            A_pred, z, Q = model(data, adj, M)
+        A_pred, z, q = model(data, adj, M)
+        p = data_processor.target_distribution(q.data)
 
-            q = Q.detach().data.cpu().numpy().argmax(1)  # Q
+        kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
+        re_loss = F.binary_cross_entropy(A_pred.view(-1), adj_label.view(-1))
+        loss = 10 * kl_loss + re_loss
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        with torch.no_grad():
+            model.eval()
+            _, _, Q = model(data, adj, M)
+            q = Q.data.cpu().numpy().argmax(1)
             acc, nmi, ari, f1 = eva(label, q)
             if acc > acc_max:
                 acc_max = acc
@@ -68,18 +77,6 @@ def train(args, feature, label, adj, logger):
                                                        nmi="{:0>.4f}".format(nmi),
                                                        ari="{:0>.4f}".format(ari),
                                                        f1="{:0>.4f}".format(f1)))
-
-        A_pred, z, q = model(data, adj, M)
-        p = data_processor.target_distribution(Q.detach())
-
-        kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
-        re_loss = F.binary_cross_entropy(A_pred.view(-1), adj_label.view(-1))
-
-        loss = 10 * kl_loss + re_loss
-
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
-    return Q, acc_max_corresponding_metrics
+    return z, acc_max_corresponding_metrics

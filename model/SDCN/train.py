@@ -49,16 +49,25 @@ def train(args, feature, label, adj, logger):
     kmeans.fit_predict(z.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
-    p, tmp_q = 0, 0
-    acc_max = 0
+    acc_max, embedding = 0, 0
     acc_max_corresponding_metrics = []
     for epoch in range(1, args.max_epoch + 1):
-        if epoch % args.update_interval == 0:
-            # update_interval
-            _, tmp_q, pred, _ = model(data, adj)
-            tmp_q = tmp_q.data
+        model.train()
+        x_bar, q, pred, _, embedding = model(data, adj)
+        p = data_processor.target_distribution(q.data)
 
-            p = data_processor.target_distribution(tmp_q)
+        kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
+        ce_loss = F.kl_div(pred.log(), p, reduction='batchmean')
+        re_loss = F.mse_loss(x_bar, data)
+        loss = 0.1 * kl_loss + 0.01 * ce_loss + re_loss
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        with torch.no_grad():
+            model.eval()
+            _, _, pred, _, embedding = model(data, adj)
             y_pred = pred.data.cpu().numpy().argmax(1)  # Z
             acc, nmi, ari, f1 = eva(label, y_pred)
             if acc > acc_max:
@@ -69,18 +78,6 @@ def train(args, feature, label, adj, logger):
                                                        nmi="{:0>.4f}".format(nmi),
                                                        ari="{:0>.4f}".format(ari),
                                                        f1="{:0>.4f}".format(f1)))
-
-        x_bar, q, pred, _ = model(data, adj)
-
-        kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
-        ce_loss = F.kl_div(pred.log(), p, reduction='batchmean')
-        re_loss = F.mse_loss(x_bar, data)
-
-        loss = 0.1 * kl_loss + 0.01 * ce_loss + re_loss
-
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
     mem_used = torch.cuda.max_memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The max memory allocated to model is: {mem_used:.2f} MB.")
-    return tmp_q, acc_max_corresponding_metrics
+    return embedding, acc_max_corresponding_metrics
