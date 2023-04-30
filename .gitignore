@@ -1,6 +1,6 @@
 /logs/**
-# /img/**
-/pretrain/**
+/img/**
+# /pretrain/**
 *.npy
 
 # Byte-compiled / optimized / DLL files
@@ -134,4 +134,4 @@ dmypy.json
 .pyre/
 
 # model file
-.pkl
+# .pkl
