@@ -81,7 +81,7 @@ python main.py --model_name SDCN --dataset_name acm
 |        arguments         |                         description                          | type | default |
 | :----------------------: | :----------------------------------------------------------: | :--: | :-----: |
 |      --is\_pretrain      |            Whether this training is pre-training.            | bool |  False  |
-|      --model\_name       | The model you want to train.  <br>  **Should** correspond to the model in the model directory. | str  |  DAEGC  |
+|      --model\_name       | The model you want to train.  <br>  **Should** correspond to the model in the model directory. | str  |  SDCN   |
 |     --dataset\_name      | The dataset you want to train. <br> **Should** correspond to the dataset name in the dataset directory. | str  |   acm   |
 |           --k            | For graph dataset, it is set to None. <br> If the dataset is not graph type, <br> you should set k to construct '**KNN**' graph of dataset. | int  |  None   |
 |           --t            | If the model need to get the matrix M, such as DAEGC, <br> you should set t according to the paper. | int  |    2    |
