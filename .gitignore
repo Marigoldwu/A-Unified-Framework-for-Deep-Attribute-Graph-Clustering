@@ -1,5 +1,5 @@
 /logs/**
-/img/**
+# /img/**
 /pretrain/**
 *.npy
 
