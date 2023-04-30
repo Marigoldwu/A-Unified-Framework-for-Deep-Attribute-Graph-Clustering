@@ -23,7 +23,7 @@ def get_abs_path(args, root_path):
         pretrain_type_dict = {"DAEGC": ["pretrain_gat"],
                               "SDCN": ["pretrain_ae"],
                               "AGCN": ["pretrain_ae"],
-                              "GSEECN": ["pretrain_ae", "pretrain_gat"],
+                              "EFRDGC": ["pretrain_ae", "pretrain_gae"],
                               "DFCN": []}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
@@ -33,11 +33,10 @@ def get_abs_path(args, root_path):
             pretrain_type = "none"
         else:
             pretrain_type = "multi"
-            for i in range(len(pretrain_type_list)):
-                type_name = pretrain_type_list[i].split("_")[-1]
+            for item in pretrain_type_list:
+                type_name = item.split("_")[-1]
                 exec(f"args.pretrain_{type_name}_save_path = "
-                     f"'./pretrain/pretrain_{type_name}/' + {pretrain_for} + '/' + {args.dataset_name} +'/'")
-
+                     f"'./pretrain/pretrain_{type_name}/{pretrain_for}/{args.dataset_name}/'")
     directory_structure = args.model_name + "/" + args.dataset_name + "/"
     args.log_save_path = "./logs/" + directory_structure
     args.dataset_path = "./"
@@ -64,8 +63,8 @@ def get_abs_path(args, root_path):
         args.clustering_tsne_save_path = replace_relative_path(args.clustering_tsne_save_path, root_path)
         args.feature_heatmap_save_path = replace_relative_path(args.feature_heatmap_save_path, root_path)
         if pretrain_type == "multi":
-            for i in range(len(pretrain_type_list)):
-                type_name = pretrain_type_list[i].split("_")[-1]
+            for item in pretrain_type_list:
+                type_name = item.split("_")[-1]
                 exec(f"args.pretrain_{type_name}_save_path = "
                      f"replace_relative_path(args.pretrain_{type_name}_save_path, root_path)")
         elif pretrain_type != "none":
@@ -79,10 +78,11 @@ def get_abs_path(args, root_path):
     if not os.path.exists(args.feature_heatmap_save_path):
         os.makedirs(args.feature_heatmap_save_path)
     if pretrain_type == "multi":
-        for i in range(len(pretrain_type_list)):
-            type_name = pretrain_type_list[i].split("_")[-1]
-            if not os.path.exists(f"args.pretrain_{type_name}_save_path"):
-                exec(f"os.makedirs(args.pretrain_{type_name}_save_path)")
+        for item in pretrain_type_list:
+            type_name = item.split("_")[-1]
+            path = getattr(args, f"pretrain_{type_name}_save_path")
+            if not os.path.exists(path):
+                os.makedirs(path)
     elif pretrain_type != "none":
         if not os.path.exists(args.pretrain_save_path):
             os.makedirs(args.pretrain_save_path)

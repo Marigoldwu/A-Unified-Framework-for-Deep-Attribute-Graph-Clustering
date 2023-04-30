@@ -81,4 +81,6 @@ def train(args, feature, label, adj, logger):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+    mem_used = torch.cuda.max_memory_allocated(device=args.device) / 1024 / 1024
+    logger.info(f"The max memory allocated to model is: {mem_used:.2f} MB.")
     return tmp_q, acc_max_corresponding_metrics

@@ -8,7 +8,9 @@ Recently, attribute graph clustering has developed rapidly, at the same time var
 
 Thanks for the open source of these authors (not listed in order):
 
-\[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Tiger101010](https://github.com/Tiger101010) | [ZhihaoPENG-CityU](https://github.com/ZhihaoPENG-CityU)\]
+\[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Liam Liu](https://github.com/Tiger101010) | [Zhihao PENG](https://github.com/ZhihaoPENG-CityU) | [William Zhu](https://github.com/grcai)\]
+
+<img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999"/> <img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527"/>  <img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu"/> <img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG"/> <img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu"/>
 
 ## Introduction
 
@@ -95,11 +97,12 @@ python main.py --model_name SDCN --dataset_name acm
 
 ## Support Models Currently
 
-| No.  |   Model   |                            Paper                             |                           Analysis                           |                       Source Code                       |
-| :--: | :-------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
-|  1   | **DAEGC** | [《Attributed Graph Clustering:  <br> A Deep Attentional Embedding Approach》](https://arxiv.org/pdf/1906.06532.pdf) | [论文阅读02](https://www.marigold.website/readArticle?workId=102&author=Marigold&authorId=1000001) |      [link](https://github.com/Tiger101010/DAEGC)       |
-|  2   | **SDCN**  | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) | [论文阅读03](https://www.marigold.website/readArticle?workId=103&author=Marigold&authorId=1000001) |         [link](https://github.com/bdy9527/SDCN)         |
-|  3   | **AGCN**  | [《Attention-driven Graph Clustering Network》](https://arxiv.org/pdf/2108.05499.pdf) | [论文阅读04](https://www.marigold.website/readArticle?workId=105&author=Marigold&authorId=1000001) | [link](https://github.com/ZhihaoPENG-CityU/MM21---AGCN) |
+| No.  |    Model    |                            Paper                             |                           Analysis                           |                       Source Code                       |
+| :--: | :---------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
+|  1   |  **DAEGC**  | [《Attributed Graph Clustering:  <br> A Deep Attentional Embedding Approach》](https://arxiv.org/pdf/1906.06532.pdf) | [论文阅读02](https://www.marigold.website/readArticle?workId=102&author=Marigold&authorId=1000001) |      [link](https://github.com/Tiger101010/DAEGC)       |
+|  2   |  **SDCN**   | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) | [论文阅读03](https://www.marigold.website/readArticle?workId=103&author=Marigold&authorId=1000001) |         [link](https://github.com/bdy9527/SDCN)         |
+|  3   |  **AGCN**   | [《Attention-driven Graph Clustering Network》](https://arxiv.org/pdf/2108.05499.pdf) | [论文阅读04](https://www.marigold.website/readArticle?workId=105&author=Marigold&authorId=1000001) | [link](https://github.com/ZhihaoPENG-CityU/MM21---AGCN) |
+|  4   | **EFR-DGC** | [《Deep Graph clustering with enhanced <br> feature representations for community detection》](https://link.springer.com/article/10.1007/s10489-022-03381-y) | [论文阅读12](https://www.marigold.website/readArticle?workId=140&author=Marigold&authorId=1000001) |        [link](https://github.com/grcai/DGC-EFR)         |
 
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
 

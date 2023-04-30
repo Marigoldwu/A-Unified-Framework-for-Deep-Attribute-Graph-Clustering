@@ -27,7 +27,6 @@ def train(args, feature, label, adj, logger):
                   embedding_size=args.embedding_size, alpha=args.alpha, num_clusters=args.clusters).to(args.device)
     logger.info(model)
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
-
     model.gat.load_state_dict(torch.load(pretrain_gae_filename, map_location='cpu'))
 
     optimizer = Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -81,5 +80,6 @@ def train(args, feature, label, adj, logger):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+    mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
+    logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     return Q, acc_max_corresponding_metrics
