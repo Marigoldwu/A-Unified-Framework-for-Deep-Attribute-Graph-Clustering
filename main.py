@@ -6,25 +6,37 @@
 @Description：the entrance file of deep graph clustering
 @WeChat Account: Marigold
 """
-import importlib
 import torch
 import argparse
-from utils import load_data, logger, time_manager, path_manager, calculator, plot
+import importlib
+import numpy as np
 from dataset import dataset_info
+from utils import load_data, logger, time_manager, path_manager, calculator, plot, rand
+
 
 if __name__ == "__main__":
     # Sometimes when faced with many experimental result files, we don't remember which experiment it was.
     # So, join me in forming the habit of recording the key points of the experiment!
     # Describe the key points of this experiment in brief words. You can record whatever you want to!
-    description = "统计参数量和模型耗时"
-    root_path = "/content/Drive/MyDrive"
+    rand.setup_seed(325)
+    description = "SDCN模型在ACM数据集上进行10次实验"
+    root_path = "/content/drive/MyDrive/DeepGraphClustering"
     """
     long model_name for copy conveniently:
+    model:
+        --model_name DAEGC --dataset_name acm
+        --model_name SDCN --dataset_name acm
+        --model_name AGCN --dataset_name acm
+        --model_name EFRDGC --dataset_name acm
     pretrain_model:
         pretrain_ae:
-            - pretrain_ae_for_sdcn
+            --is_pretrain True --model_name pretrain_ae_for_sdcn --dataset_name acm
+            --is_pretrain True --model_name pretrain_ae_for_agcn --dataset_name acm
+            --is_pretrain True --model_name pretrain_ae_for_efrdgc --dataset_name acm
         pretrain_gat:
-            - pretrain_gat_for_daegc
+            --is_pretrain True --model_name pretrain_gat_for_daegc --dataset_name acm
+        pretrain_gae:
+            --is_pretrain True --model_name pretrain_gae_for_efrdgc --dataset_name acm
     """
     parser = argparse.ArgumentParser(description='Unified Code Framework of Deep Graph Clustering')
     parser.add_argument('--is_pretrain', type=bool, default=False)
@@ -32,7 +44,6 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_name', type=str, default="acm")
     parser.add_argument("--k", type=int, default=None)
     parser.add_argument("--t", type=int, default=2)
-    parser.add_argument("--update_interval", type=int, default=1)
     parser.add_argument("--loops", type=int, default=1)
     parser.add_argument("--is_change_root_path", type=bool, default=False)
     parser.add_argument("--plot_clustering_tsne", type=bool, default=False)
@@ -55,6 +66,7 @@ if __name__ == "__main__":
     # Load data, including features, label, adjacency matrix.
     # Note: the store format of data is numpy.
     feature, label, adj = load_data.load_graph_data(args.dataset_path, args.dataset_name)
+    adj = adj + np.eye(adj.shape[0])
 
     # Auto import the training module of the model you specified.
     model_train = importlib.import_module(f"model.{args.model_name}.train")
@@ -62,14 +74,18 @@ if __name__ == "__main__":
 
     # Training
     acc, nmi, ari, f1 = [], [], [], []
+    # repeat args.loops times
     for i in range(args.loops):
         logger.info("Training loop No.{}".format(i + 1))
         timer.start()
+        # call the training function of your specified model
         embedding, max_acc_corresponding_metrics = train(args, feature, label, adj, logger)
+        # record the max value of each loop
         acc.append(max_acc_corresponding_metrics[0])
         nmi.append(max_acc_corresponding_metrics[1])
         ari.append(max_acc_corresponding_metrics[2])
         f1.append(max_acc_corresponding_metrics[3])
+        # draw the clustering image or embedding heatmap
         if args.plot_clustering_tsne:
             plot.plot_clustering_tsne(args, embedding, label, logger)
         if args.plot_embedding_heatmap:

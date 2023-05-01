@@ -24,6 +24,8 @@ def get_abs_path(args, root_path):
                               "SDCN": ["pretrain_ae"],
                               "AGCN": ["pretrain_ae"],
                               "EFRDGC": ["pretrain_ae", "pretrain_gae"],
+                              "GSEECN": ["pretrain_ae", "pretrain_gae"],
+                              "TGSEECN": ["pretrain_ae", "pretrain_gat"],
                               "DFCN": []}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
