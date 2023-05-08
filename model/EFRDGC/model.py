@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 from torch.nn.parameter import Parameter
 from module.AE import AE
-from module.GAE_for_EFRDGC import GAE
+from module.GAT_for_EFRDGC import GAT
 
 
 class EFRDGC(nn.Module):
@@ -21,7 +21,7 @@ class EFRDGC(nn.Module):
                      enc_1_dim, enc_2_dim, enc_3_dim,
                      dec_1_dim, dec_2_dim, dec_3_dim)
 
-        self.gae = GAE(input_dim, hidden_1_dim, hidden_2_dim, hidden_3_dim, alpha)
+        self.gat = GAT(input_dim, hidden_1_dim, hidden_2_dim, hidden_3_dim, alpha)
 
         # cluster layer
         self.cluster_layer = Parameter(torch.Tensor(clusters, hidden_3_dim))
@@ -31,7 +31,7 @@ class EFRDGC(nn.Module):
 
     def forward(self, x, adj, M, sigma=0.1):
         x_bar, enc_h1, enc_h2, enc_h3, z = self.ae(x)
-        A_pred, z = self.gae(x, adj, M, enc_h1, enc_h2, enc_h3, sigma)
+        A_pred, z = self.gat(x, adj, M, enc_h1, enc_h2, enc_h3, sigma)
 
         q = 1.0 / (1.0 + torch.sum(torch.pow(z.unsqueeze(1) - self.cluster_layer, 2), 2) / self.v)
         q = q.pow((self.v + 1.0) / 2.0)

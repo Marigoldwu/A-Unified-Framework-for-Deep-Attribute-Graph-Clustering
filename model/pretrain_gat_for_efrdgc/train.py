@@ -9,7 +9,7 @@
 import torch
 import torch.nn.functional as F
 from sklearn.cluster import KMeans
-from module.GAE_for_EFRDGC import GAE
+from module.GAT_for_EFRDGC import GAT
 from torch.optim import Adam
 from utils import data_processor
 from utils.evaluation import eva
@@ -26,7 +26,7 @@ def train(args, feature, label, adj, logger):
     args.pretrain_lr = 1e-3
 
     pretrain_gae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
-    model = GAE(args.input_dim, args.hidden_1_dim, args.hidden_2_dim, args.hidden_3_dim, args.alpha).to(args.device)
+    model = GAT(args.input_dim, args.hidden_1_dim, args.hidden_2_dim, args.hidden_3_dim, args.alpha).to(args.device)
     logger.info(model)
     optimizer = Adam(model.parameters(), args.pretrain_lr, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.pretrain_epoch)

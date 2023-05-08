@@ -9,7 +9,7 @@
 import torch
 import torch.nn.functional as F
 from sklearn.cluster import KMeans
-from module.GAT import GAT
+from module.GAT_for_DAEGC import GAT
 from torch.optim import Adam
 from utils import data_processor
 from utils.evaluation import eva

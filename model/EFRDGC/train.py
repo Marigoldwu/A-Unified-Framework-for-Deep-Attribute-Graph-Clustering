@@ -48,9 +48,9 @@ def train(args, feature, label, adj, logger):
     logger.info(model)
     # load pretraining parameters
     pretrain_ae_filename = args.pretrain_ae_save_path + args.dataset_name + ".pkl"
-    pretrain_gae_filename = args.pretrain_gae_save_path + args.dataset_name + ".pkl"
+    pretrain_gat_filename = args.pretrain_gat_save_path + args.dataset_name + ".pkl"
     model.ae.load_state_dict(torch.load(pretrain_ae_filename, map_location='cpu'))
-    model.gae.load_state_dict(torch.load(pretrain_gae_filename, map_location='cpu'))
+    model.gat.load_state_dict(torch.load(pretrain_gat_filename, map_location='cpu'))
 
     optimizer = Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.max_epoch)

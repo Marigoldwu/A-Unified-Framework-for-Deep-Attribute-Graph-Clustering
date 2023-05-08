@@ -1,31 +1,32 @@
 # -*- coding: utf-8 -*-
 """
-@Time: 2022/12/5 16:50 
+@Time: 2023/5/8 17:25 
 @Author: Marigold
 @Version: 0.0.0
 @Description：
 @WeChat Account: Marigold
 """
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
-from torch import nn
 
-from module.GAT import GraphAttentionLayer
+from module.GCN import GCN
 
 
 class GAE(nn.Module):
-    def __init__(self, n_input, embedding_size, hidden_1_dim, hidden_2_dim, hidden_3_dim, alpha):
+    def __init__(self, input_dim, hidden_size, embedding_dim):
         super(GAE, self).__init__()
-        self.conv1 = GraphAttentionLayer(n_input, hidden_1_dim, alpha)
-        self.conv2 = GraphAttentionLayer(hidden_1_dim, hidden_2_dim, alpha)
-        self.conv3 = GraphAttentionLayer(hidden_2_dim, hidden_3_dim, alpha)
-        self.conv4 = GraphAttentionLayer(hidden_3_dim, embedding_size, alpha)
+        self.gcn1 = GCN(input_dim, hidden_size)
+        self.gcn2 = GCN(hidden_size, embedding_dim)
 
-    def forward(self, x, adj, M):
-        r1 = self.conv1(x, adj, M)
-        r2 = self.conv2(r1, adj, M)
-        r3 = self.conv3(r2, adj, M)
-        r4 = self.conv4(r3, adj, M)
-        r = F.normalize(r4, p=2, dim=1)
-        A_pred = torch.sigmoid(torch.matmul(r, r.t()))
-        return A_pred, r
+    def forward(self, x, adj):
+        h1 = F.relu(self.gcn1(x, adj))
+        h2 = self.gcn2(h1, adj)
+        embedding = F.normalize(h2, p=2, dim=1)
+        A_pred = dot_product_decode(embedding)
+        return A_pred, embedding
+
+
+def dot_product_decode(Z):
+    A_pred = torch.sigmoid(torch.matmul(Z, Z.t()))
+    return A_pred

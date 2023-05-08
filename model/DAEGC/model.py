@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 from torch.nn.parameter import Parameter
 
-from module.GAT import GAT
+from module.GAT_for_DAEGC import GAT
 
 
 class DAEGC(nn.Module):
