@@ -33,7 +33,7 @@ On the basis of ADGC, I refactored the code to make the deep clustering code ach
   - `plot.py`: It includes the function of drawing clustering visualization via **TSNE** and save the image. The features heatmap will also be developed soon later.
   - `time_manager.py`: It includes **a time class** to record time consuming and a function to format datetime.
   - `rand.py`: It includes the function of set random seed.
-  - `utils.py`: It includes the tools function from pervious file, such as fomatter.py.
+  - `utils.py`: It includes the tools function from pervious file, such as `get_format_variables()` from `fomatter.py`.
   - `options.py`: It includes the argparse object.
 - `logs`: The directory is used to **store the output logs files**. Its subdirectories are named after the model names and the logs files are named after the start time.
 - `pretrain`:  The directory is used to **store the pre-training parameters files**. Its subdirectories are named after the format of pretrain\_{module name}. Parameters files are categorized by model and dataset name.
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 `Step 3`: Run the file in the directory where main.py is located in command line. If it is in the integrated compilation environment, you can directly run the main.py file. 
 
-Take the training of DAEGC as example:
+**Take the training of DAEGC as example:**
 
 1. **pretrain GAT:**
 
@@ -71,9 +71,9 @@ python main.py --model DAEGC --dataset cora -D Train_DAEGC_1_iteration_on_the_AC
 python main.py -M DAEGC -S cora -D Train_DAEGC_1_iteration_on_the_ACM_dataset
 ```
 
-Take the training of SDCN as example:
+**Take the training of SDCN as example:**
 
-pretrain AE:
+1. **pretrain AE:**
 
 ```shell
 python main.py --pretrain --model pretrain_ae_for_sdcn --dataset acm --desc pretrain_ae_for_SDCN_on_acm
@@ -81,7 +81,7 @@ python main.py --pretrain --model pretrain_ae_for_sdcn --dataset acm --desc pret
 python main.py -P -M pretrain_ae_for_sdcn -S acm -D pretrain_ae_for_SDCN_on_acm
 ```
 
-train SDCN:
+2. **train SDCN:**
 
 ```shell
 python main.py --model SDCN --dataset acm --desc Train_SDCN_1_iteration_on_the_ACM_dataset
@@ -99,9 +99,9 @@ python main.py -M SDCN -S acm -D Train_SDCN_1_iteration_on_the_ACM_dataset
 |    --k     |  -K   | For graph dataset, it is set to None. <br> If the dataset is not graph type, <br> you should set k to construct '**KNN**' graph of dataset. |     int      |  None   |
 |    --t     |  -T   | If the model need to get the matrix M, such as DAEGC, <br> you should set t according to the paper. |     int      |    2    |
 |  --loops   |  -L   | The training times. If you want to train the model <br> for 10 times, you can set it to 10. |     int      |    1    |
-|   --root   |  -R   | If you need to change the relative path to the <br> absolute path,  you can set it to root path. |     str      |  False  |
-|   --tsne   |  -C   | If you want to draw the clustering result with scatter, <br> you can set it to True. | "store_true" |  False  |
-| --heatmap  |  -H   | If you want to draw the heatmap of the embedding <br> representation learned by model, you can set it to True. | "store_true" |  False  |
+|   --root   |  -R   | If you need to change the relative path to the <br> absolute path,  you can set it to root path. |     str      |  None   |
+|   --tsne   |  -C   | If you want to draw the clustering result with scatter, <br> you can use it. | "store_true" |  False  |
+| --heatmap  |  -H   | If you want to draw the heatmap of the embedding <br> representation learned by model, you can use it. | "store_true" |  False  |
 
 `Step 4`: If you run the code successfully, don't forget give me a star! :wink:
 
