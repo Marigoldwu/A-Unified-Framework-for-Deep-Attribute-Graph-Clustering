@@ -8,7 +8,8 @@
 """
 
 
-def get_dataset_info(name, args):
+def get_dataset_info(args):
+    name = args.dataset_name
     if name == "acm":
         args.clusters = 3
         args.lr = 1e-3
