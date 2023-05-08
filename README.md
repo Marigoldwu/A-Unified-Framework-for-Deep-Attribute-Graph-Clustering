@@ -24,14 +24,17 @@ On the basis of ADGC, I refactored the code to make the deep clustering code ach
 - `utils`: The directory including some **tool** classes and functions.
   - `load_data.py`: It includes the functions of  **loading dataset** for training.
   - `data_processor.py`: It includes the functions of transferring data storing types and others, such as **numpy to torch**, **symmetric normalization** et al.
-  - `calculator.py`: It includes the function of calculating **mean** and standard difference.
+  - ~~`calculator.py`:~~ ~~It includes the function of calculating **mean** and standard difference.~~ This file has been merged into `utils.py`.
   - `evalution.py`: It includes the function of calculating the related **metrics** of clustering, such as ACC, NMI, ARI and F1\_score.
-  - `formatter.py`: It includes the function of **formatting** the output of **variables** according to your input variables.
+  - ~~`formatter.py`: It includes the function of **formatting** the output of **variables** according to your input variables.~~ This file has been merged into `utils.py`.
   - `logger.py`: It includes **a log class**, through which you can record the information you want to output to the log file.
-  - `parameter_counter.py`: It includes the function of counting the model's parameters.
+  - ~~`parameter_counter.py`: It includes the function of counting the model's parameters.~~ This file has been merged into `utils.py`.
   - `path_manager.py`: It includes the function of  transforming **the relative path** to **the absolute path** if needed. Of course, if you don't need, it also should be called because it also **stores the path** needed by the training, such as the storing path of logs, pretrain parameters files, clustering visualization images, et al.
   - `plot.py`: It includes the function of drawing clustering visualization via **TSNE** and save the image. The features heatmap will also be developed soon later.
   - `time_manager.py`: It includes **a time class** to record time consuming and a function to format datetime.
+  - `rand.py`: It includes the function of set random seed.
+  - `utils.py`: It includes the tools function from pervious file, such as fomatter.py.
+  - `options.py`: It includes the argparse object.
 - `logs`: The directory is used to **store the output logs files**. Its subdirectories are named after the model names and the logs files are named after the start time.
 - `pretrain`:  The directory is used to **store the pre-training parameters files**. Its subdirectories are named after the format of pretrain\_{module name}. Parameters files are categorized by model and dataset name.
 - `img`: The directory is used to **store the output images**, whose subdirectories are named after **clustering** and **heatmap**.
@@ -52,16 +55,20 @@ pip install -r requirements.txt
 
 Take the training of DAEGC as example:
 
-pretrain GAT:
+1. **pretrain GAT:**
 
 ```shell
-python main.py --is_pretrain True --model_name pretrain_gat_for_daegc --dataset_name acm
+python main.py --pretrain --model pretrain_gat_for_daegc --dataset acm  --desc pretrain_the_GAT_for_DAEGC_on_acm
+# or the simplified command:
+python main.py -P -M pretrain_gat_for_daegc -S acm -D pretrain_the_GAT_for_DAEGC_on_acm
 ```
 
-train DAEGC:
+2. **train DAEGC:**
 
 ```shell
-python main.py --model_name DAEGC --dataset_name cora
+python main.py --model DAEGC --dataset cora -D Train_DAEGC_1_iteration_on_the_ACM_dataset
+# or the simplified command:
+python main.py -M DAEGC -S cora -D Train_DAEGC_1_iteration_on_the_ACM_dataset
 ```
 
 Take the training of SDCN as example:
@@ -69,28 +76,32 @@ Take the training of SDCN as example:
 pretrain AE:
 
 ```shell
-python main.py --is_pretrain True --model_name pretrain_ae_for_sdcn --dataset_name acm
+python main.py --pretrain --model pretrain_ae_for_sdcn --dataset acm --desc pretrain_ae_for_SDCN_on_acm
+# or simplified command:
+python main.py -P -M pretrain_ae_for_sdcn -S acm -D pretrain_ae_for_SDCN_on_acm
 ```
 
 train SDCN:
 
 ```shell
-python main.py --model_name SDCN --dataset_name acm
+python main.py --model SDCN --dataset acm --desc Train_SDCN_1_iteration_on_the_ACM_dataset
+# or simplified command:
+python main.py -M SDCN -S acm -D Train_SDCN_1_iteration_on_the_ACM_dataset
 ```
 
 > Here are the argparse arguments you can change:
 
-|        arguments         |                         description                          | type | default |
-| :----------------------: | :----------------------------------------------------------: | :--: | :-----: |
-|      --is\_pretrain      |            Whether this training is pre-training.            | bool |  False  |
-|      --model\_name       | The model you want to train.  <br>  **Should** correspond to the model in the model directory. | str  |  SDCN   |
-|     --dataset\_name      | The dataset you want to train. <br> **Should** correspond to the dataset name in the dataset directory. | str  |   acm   |
-|           --k            | For graph dataset, it is set to None. <br> If the dataset is not graph type, <br> you should set k to construct '**KNN**' graph of dataset. | int  |  None   |
-|           --t            | If the model need to get the matrix M, such as DAEGC, <br> you should set t according to the paper. | int  |    2    |
-|         --loops          | The training times. If you want to train the model <br> for 10 times, you can set it to 10. | int  |    1    |
-|  --is\_change_root_path  | If you need to change the relative path to the <br> absolute path,  you can set it to True. <br> **Note that** it just a flag, the root path <br> should be changed manually in the main.py. Then the <br> programmer will auto change all the path. | bool |  False  |
-| --plot\_clustering\_tsne | If you want to draw the clustering result with scatter, <br> you can set it to True. **Note that** don't use it in <br>multiple loops, or you can only get the last loop result. | bool |  False  |
-| --plot_embedding_heatmap | If you want to draw the heatmap of the embedding <br> representation learned by model, you can set it to True. | bool |  False  |
+| arguments  | short |                         description                          | type/action  | default |
+| :--------: | :---: | :----------------------------------------------------------: | :----------: | :-----: |
+| --pretrain |  -P   |            Whether this training is pretraining.             | "store_true" |  False  |
+|  --model   |  -M   | The model you want to train.  <br>  **Should** correspond to the model in the model directory. |     str      |  SDCN   |
+| --dataset  |  -S   | The dataset you want to train. <br> **Should** correspond to the dataset name in the dataset directory. |     str      |   acm   |
+|    --k     |  -K   | For graph dataset, it is set to None. <br> If the dataset is not graph type, <br> you should set k to construct '**KNN**' graph of dataset. |     int      |  None   |
+|    --t     |  -T   | If the model need to get the matrix M, such as DAEGC, <br> you should set t according to the paper. |     int      |    2    |
+|  --loops   |  -L   | The training times. If you want to train the model <br> for 10 times, you can set it to 10. |     int      |    1    |
+|   --root   |  -R   | If you need to change the relative path to the <br> absolute path,  you can set it to root path. |     str      |  False  |
+|   --tsne   |  -C   | If you want to draw the clustering result with scatter, <br> you can set it to True. | "store_true" |  False  |
+| --heatmap  |  -H   | If you want to draw the heatmap of the embedding <br> representation learned by model, you can set it to True. | "store_true" |  False  |
 
 `Step 4`: If you run the code successfully, don't forget give me a star! :wink:
 
