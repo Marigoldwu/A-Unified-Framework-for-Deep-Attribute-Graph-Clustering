@@ -13,10 +13,10 @@ import torch.nn.functional as F
 from torch.optim import Adam
 from model.AGCN.model import AGCN
 from sklearn.cluster import KMeans
-from utils import formatter, data_processor
+from utils import data_processor
 from utils.data_processor import target_distribution
 from utils.evaluation import eva
-from utils.parameter_counter import count_parameters
+from utils.utils import count_parameters, get_format_variables
 
 
 def train(args, feature, label, adj, logger):
@@ -27,13 +27,13 @@ def train(args, feature, label, adj, logger):
     args.dec_1_dim = 2000
     args.dec_2_dim = 500
     args.dec_3_dim = 500
-    args.max_epoch = 200
+    args.max_epoch = 50
 
     # hyper parameters
     lambda_dict = {"usps": [1000, 1000], "hhar": [1, 0.1], "reut": [10, 10]}
     lambda_1 = 0.1 if args.k is None else lambda_dict[args.dataset_name][0]
     lambda_2 = 0.01 if args.k is None else lambda_dict[args.dataset_name][1]
-    logger.info(formatter.get_format_variables(lambda_1=lambda_1, lambda_2=lambda_2))
+    logger.info(get_format_variables(lambda_1=lambda_1, lambda_2=lambda_2))
 
     pretrain_ae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
 
@@ -42,8 +42,6 @@ def train(args, feature, label, adj, logger):
                  dec_1_dim=args.dec_1_dim, dec_2_dim=args.dec_2_dim, dec_3_dim=args.dec_3_dim,
                  clusters=args.clusters, v=1.0).to(args.device)
     logger.info(model)
-    # Get the network parameters
-    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
 
     model.ae.load_state_dict(torch.load(pretrain_ae_filename, map_location='cpu'))
 
@@ -85,11 +83,11 @@ def train(args, feature, label, adj, logger):
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
-            logger.info(formatter.get_format_variables(epoch="{:0>3d}".format(epoch),
-                                                       acc="{:0>.4f}".format(acc),
-                                                       nmi="{:0>.4f}".format(nmi),
-                                                       ari="{:0>.4f}".format(ari),
-                                                       f1="{:0>.4f}".format(f1)))
+            logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
+                                             ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
+
+    # Get the network parameters
+    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     return embedding, acc_max_corresponding_metrics

@@ -8,12 +8,11 @@
 """
 import torch
 import importlib
-import numpy as np
 
 from utils.options import parser
 from dataset import dataset_info
-from utils import load_data, logger, time_manager, path_manager, calculator, plot, rand, data_processor
-from utils.record import record_metrics
+from utils import load_data, logger, time_manager, path_manager, plot, rand, data_processor
+from utils.utils import cal_mean_std, record_metrics
 
 if __name__ == "__main__":
     rand.setup_seed(325)
@@ -50,7 +49,7 @@ if __name__ == "__main__":
     acc_list, nmi_list, ari_list, f1_list = [], [], [], []
     # repeat args.loops rounds
     for i in range(args.loops):
-        logger.info(f"==================Training loop No.{i+1}==================")
+        logger.info(f"==================Training loop No.{i + 1}==================")
         timer.start()
         # call the training function of your specified model
         embedding, max_acc_corresponding_metrics = train(args, feature, label, adj, logger)
@@ -70,5 +69,5 @@ if __name__ == "__main__":
 
     logger.info("Total loops: {}".format(args.loops))
     logger.info("Mean value:")
-    logger.info(calculator.cal_mean_std(acc_list, nmi_list, ari_list, f1_list))
+    logger.info(cal_mean_std(acc_list, nmi_list, ari_list, f1_list))
     logger.info("Training over! Punch out!")

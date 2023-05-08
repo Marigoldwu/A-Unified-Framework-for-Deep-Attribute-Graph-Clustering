@@ -13,9 +13,9 @@ from model.EFRDGC.model import EFRDGC
 from torch.optim import Adam
 from sklearn.cluster import KMeans
 
-from utils import data_processor, formatter
+from utils import data_processor
 from utils.evaluation import eva
-from utils.parameter_counter import count_parameters
+from utils.utils import count_parameters, get_format_variables
 
 
 def train(args, feature, label, adj, logger):
@@ -46,7 +46,6 @@ def train(args, feature, label, adj, logger):
                    args.hidden_1_dim, args.hidden_2_dim, args.hidden_3_dim,
                    args.clusters, alpha=args.alpha).to(args.device)
     logger.info(model)
-    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     # load pretraining parameters
     pretrain_ae_filename = args.pretrain_ae_save_path + args.dataset_name + ".pkl"
     pretrain_gae_filename = args.pretrain_gae_save_path + args.dataset_name + ".pkl"
@@ -96,11 +95,11 @@ def train(args, feature, label, adj, logger):
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
-            logger.info(formatter.get_format_variables(epoch="{:0>3d}".format(epoch),
-                                                       acc="{:0>.4f}".format(acc),
-                                                       nmi="{:0>.4f}".format(nmi),
-                                                       ari="{:0>.4f}".format(ari),
-                                                       f1="{:0>.4f}".format(f1)))
+            logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
+                                             ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
+
+    # Get the network parameters
+    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     return z, acc_max_corresponding_metrics

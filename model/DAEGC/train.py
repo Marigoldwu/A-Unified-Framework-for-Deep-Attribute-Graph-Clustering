@@ -11,10 +11,10 @@ import torch.nn.functional as F
 
 from torch.optim import Adam
 from model.DAEGC.model import DAEGC
-from utils import data_processor, formatter
+from utils import data_processor
 from sklearn.cluster import KMeans
 from utils.evaluation import eva
-from utils.parameter_counter import count_parameters
+from utils.utils import count_parameters, get_format_variables
 
 
 def train(args, feature, label, adj, logger):
@@ -26,7 +26,6 @@ def train(args, feature, label, adj, logger):
     model = DAEGC(num_features=args.input_dim, hidden_size=args.hidden_size,
                   embedding_size=args.embedding_size, alpha=args.alpha, num_clusters=args.clusters).to(args.device)
     logger.info(model)
-    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     model.gat.load_state_dict(torch.load(pretrain_gae_filename, map_location='cpu'))
 
     optimizer = Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -72,11 +71,11 @@ def train(args, feature, label, adj, logger):
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
-            logger.info(formatter.get_format_variables(epoch="{:0>3d}".format(epoch),
-                                                       acc="{:0>.4f}".format(acc),
-                                                       nmi="{:0>.4f}".format(nmi),
-                                                       ari="{:0>.4f}".format(ari),
-                                                       f1="{:0>.4f}".format(f1)))
+            logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
+                                             ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
+
+    # Get the network parameters
+    logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     return z, acc_max_corresponding_metrics

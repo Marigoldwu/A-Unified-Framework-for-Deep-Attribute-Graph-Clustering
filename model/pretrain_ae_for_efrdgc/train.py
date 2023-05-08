@@ -13,7 +13,8 @@ from torch.utils.data import DataLoader
 from sklearn.cluster import KMeans
 from utils.evaluation import eva
 from module.AE import AE
-from utils import load_data, data_processor, formatter
+from utils import load_data, data_processor
+from utils.utils import get_format_variables
 
 
 def train(args, feature, label, adj, logger):
@@ -67,11 +68,8 @@ def train(args, feature, label, adj, logger):
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
-            logger.info(formatter.get_format_variables(epoch="{:0>3d}".format(epoch),
-                                                       acc="{:0>.4f}".format(acc),
-                                                       nmi="{:0>.4f}".format(nmi),
-                                                       ari="{:0>.4f}".format(ari),
-                                                       f1="{:0>.4f}".format(f1)))
+            logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
+                                             ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.state_dict(), pretrain_ae_filename)
     return z, acc_max_corresponding_metrics
