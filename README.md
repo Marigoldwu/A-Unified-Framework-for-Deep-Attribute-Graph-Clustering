@@ -62,17 +62,17 @@ pip install -r requirements.txt
 :one: **pretrain GAT:**
 
 ```shell
-python main.py --pretrain --model pretrain_gat_for_daegc --dataset acm  --desc pretrain_the_GAT_for_DAEGC_on_acm
+python main.py --pretrain --model pretrain_gat_for_daegc --dataset acm  --t 2 --desc pretrain_the_GAT_for_DAEGC_on_acm
 # or the simplified command:
-python main.py -P -M pretrain_gat_for_daegc -S acm -D pretrain_the_GAT_for_DAEGC_on_acm
+python main.py -P -M pretrain_gat_for_daegc -S acm -T 2 -D pretrain_the_GAT_for_DAEGC_on_acm
 ```
 
 :two: **train DAEGC:**
 
 ```shell
-python main.py --model DAEGC --dataset cora -D Train_DAEGC_1_iteration_on_the_ACM_dataset
+python main.py --model DAEGC --dataset cora -T 2 -D Train_DAEGC_1_iteration_on_the_ACM_dataset
 # or the simplified command:
-python main.py -M DAEGC -S cora -D Train_DAEGC_1_iteration_on_the_ACM_dataset
+python main.py -M DAEGC -S cora -T 2 -D Train_DAEGC_1_iteration_on_the_ACM_dataset
 ```
 
 ####  Example 2
@@ -90,9 +90,9 @@ python main.py -P -M pretrain_ae_for_sdcn -S acm -D pretrain_ae_for_SDCN_on_acm
 :two: **train SDCN:**
 
 ```shell
-python main.py --model SDCN --dataset acm --desc Train_SDCN_1_iteration_on_the_ACM_dataset
+python main.py --model SDCN --dataset acm -N --desc Train_SDCN_1_iteration_on_the_ACM_dataset
 # or simplified command:
-python main.py -M SDCN -S acm -D Train_SDCN_1_iteration_on_the_ACM_dataset
+python main.py -M SDCN -S acm -N  -D Train_SDCN_1_iteration_on_the_ACM_dataset
 ```
 
 ✈️ `Step 4`: If you run the code successfully, don't forget give me a star! :wink:
