@@ -33,33 +33,27 @@ def torch_to_numpy(t):
     return t.numpy()
 
 
-def normalize_adj(adj, self_loop=True, symmetry=True):
+def normalize_adj(adj, symmetry=True):
     """
     normalize the adj matrix
 
     :param adj: input adj matrix
-    :param self_loop: if add the self loop or not
     :param symmetry: symmetry normalize or not
     :return norm_adj: the normalized adj matrix
     """
-    # add the self_loop
-    if self_loop:
-        adj_tmp = adj + np.eye(adj.shape[0])
-    else:
-        adj_tmp = adj
 
     # calculate degree matrix and it's inverse matrix
-    d = np.diag(adj_tmp.sum(0))
+    d = np.diag(adj.sum(0))
     d_inv = np.linalg.inv(d)
 
     # symmetry normalize: D^{-0.5} A D^{-0.5}
     if symmetry:
         sqrt_d_inv = np.sqrt(d_inv)
-        norm_adj = np.matmul(np.matmul(sqrt_d_inv, adj_tmp), sqrt_d_inv)
+        norm_adj = np.matmul(np.matmul(sqrt_d_inv, adj), sqrt_d_inv)
 
     # non-symmetry normalize: D^{-1} A
     else:
-        norm_adj = np.matmul(d_inv, adj_tmp)
+        norm_adj = np.matmul(d_inv, adj)
 
     return norm_adj
 

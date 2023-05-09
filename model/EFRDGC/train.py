@@ -18,7 +18,7 @@ from utils.evaluation import eva
 from utils.utils import count_parameters, get_format_variables
 
 
-def train(args, feature, label, adj, logger):
+def train(args, data, logger):
     max_epoch_dict = {"acm": 200,
                       "dblp": 200,
                       "cite": 100,
@@ -56,9 +56,10 @@ def train(args, feature, label, adj, logger):
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.max_epoch)
 
     # data transformation
-    M = data_processor.get_M(adj).to(args.device).float()
-    feature = data_processor.numpy_to_torch(feature).to(args.device).float()
-    adj = data_processor.numpy_to_torch(adj).to(args.device).float()
+    M = data.M.to(args.device).float()
+    feature = data.feature.to(args.device).float()
+    adj = data.adj.to(args.device).float()
+    label = data.label
     adj_label = adj
 
     # init clustering centers

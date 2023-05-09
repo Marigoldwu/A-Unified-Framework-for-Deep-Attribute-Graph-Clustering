@@ -8,50 +8,49 @@
 """
 import torch
 import torch.nn.functional as F
-
+from model.GCAE.model import GCAE
 from torch.optim import Adam
-from model.DAEGC.model import DAEGC
-from utils import data_processor
 from sklearn.cluster import KMeans
+from utils import data_processor
 from utils.evaluation import eva
-from utils.utils import count_parameters, get_format_variables
+from utils.utils import get_format_variables, count_parameters
 
 
 def train(args, data, logger):
-    args.hidden_size = 256
-    args.embedding_size = 16
-    args.alpha = 0.2
+    args.hidden_dim = 256
+    args.embedding_dim = 16
     args.weight_decay = 5e-3
+    args.adj_loop = True
+    args.adj_norm = True
+    args.adj_symmetric = True
 
-    pretrain_gae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
-    model = DAEGC(num_features=args.input_dim, hidden_size=args.hidden_size,
-                  embedding_size=args.embedding_size, alpha=args.alpha, num_clusters=args.clusters).to(args.device)
+    # load model
+    model = GCAE(args.input_dim, args.clusters, args.hidden_dim, args.embedding_dim).to(args.device)
     logger.info(model)
-    model.gat.load_state_dict(torch.load(pretrain_gae_filename, map_location='cpu'))
+    # load pretraining parameters
+    pretrain_gae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
+    model.gae.load_state_dict(torch.load(pretrain_gae_filename, map_location='cpu'))
 
     optimizer = Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
-    # data and label
+    # data transformation
     feature = data.feature.to(args.device).float()
-    M = data.M.to(args.device).float()
     adj = data.adj.to(args.device).float()
     label = data.label
-
     adj_label = adj
 
+    # init clustering centers
     with torch.no_grad():
-        _, z = model.gat(feature, adj, M)
-
-    # get kmeans and pretrain cluster result
+        _, _, embedding = model(feature, adj)
     kmeans = KMeans(n_clusters=args.clusters, n_init=20)
-    kmeans.fit_predict(z.data.cpu().numpy())
+    kmeans.fit_predict(embedding.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
     acc_max = 0
-    acc_max_corresponding_metrics = [0, 0, 0, 0]
-    for epoch in range(1, args.max_epoch + 1):
+    acc_max_corresponding_metrics = []
+    for epoch in range(1, args.max_epoch+1):
         model.train()
-        A_pred, z, q = model(feature, adj, M)
+        A_pred, q, _ = model(feature, adj)
         p = data_processor.target_distribution(q.data)
 
         kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
@@ -64,9 +63,9 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            _, _, Q = model(feature, adj, M)
-            q = Q.data.cpu().numpy().argmax(1)
-            acc, nmi, ari, f1 = eva(label, q)
+            _, q, embedding = model(feature, adj)
+            y_pred = q.data.cpu().numpy().argmax(1)
+            acc, nmi, ari, f1 = eva(label, y_pred)
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
@@ -75,6 +74,6 @@ def train(args, data, logger):
 
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
-    mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
-    logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
-    return z, acc_max_corresponding_metrics
+    mem_used = torch.cuda.max_memory_allocated(device=args.device) / 1024 / 1024
+    logger.info(f"The max memory allocated to model is: {mem_used:.2f} MB.")
+    return embedding, acc_max_corresponding_metrics

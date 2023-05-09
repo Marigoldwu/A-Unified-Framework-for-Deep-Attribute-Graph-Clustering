@@ -13,13 +13,12 @@ import torch.nn.functional as F
 from torch.optim import Adam
 from model.AGCN.model import AGCN
 from sklearn.cluster import KMeans
-from utils import data_processor
 from utils.data_processor import target_distribution
 from utils.evaluation import eva
 from utils.utils import count_parameters, get_format_variables
 
 
-def train(args, feature, label, adj, logger):
+def train(args, data, logger):
     args.embedding_dim = 10
     args.enc_1_dim = 500
     args.enc_2_dim = 500
@@ -48,9 +47,9 @@ def train(args, feature, label, adj, logger):
     optimizer = Adam(model.parameters(), lr=args.lr)
     # cluster parameter initiate
 
-    feature = data_processor.numpy_to_torch(feature).to(args.device).float()
-    adj = data_processor.normalize_adj(adj)
-    adj = data_processor.numpy_to_torch(adj).to(args.device).float()
+    feature = data.feature.to(args.device).float()
+    adj = data.adj.to(args.device).float()
+    label = data.label
 
     with torch.no_grad():
         _, _, _, _, z = model.ae(feature)

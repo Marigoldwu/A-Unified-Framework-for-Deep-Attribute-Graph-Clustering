@@ -10,6 +10,28 @@ import logging
 import numpy as np
 from torch.utils.data import Dataset
 
+from utils.data_processor import numpy_to_torch, construct_graph, normalize_adj, get_M
+
+
+class Data:
+    def __init__(self, feature, label, adj, M):
+        self.feature = feature
+        self.label = label
+        self.adj = adj
+        self.M = M
+
+    def __getattr__(self, name):
+        if name == 'feature':
+            return self.feature
+        elif name == 'label':
+            return self.label
+        elif name == 'adj':
+            return self.adj
+        elif name == 'M':
+            return self.M
+        else:
+            raise AttributeError(f"'Data' object has no attribute '{name}'")
+
 
 class LoadDataset(Dataset):
     def __init__(self, data):
@@ -75,7 +97,7 @@ def load_graph_data(root_path=".", dataset_name="dblp", show_details=False):
     return feat, label, adj
 
 
-def load_data(root_path="./", dataset_name="USPS", show_details=False):
+def load_non_graph_data(root_path="./", dataset_name="USPS", show_details=False):
     """
     load non-graph data
     :param root_path: the root path
@@ -113,3 +135,53 @@ def load_data(root_path="./", dataset_name="USPS", show_details=False):
             print(len(label[np.where(label == i)]))
         print("++++++++++++++++++++++++++++++")
     return feat, label
+
+
+def load_data(k, dataset_path, dataset_name,
+              feature_type="tensor", adj_type="tensor", label_type="npy",
+              adj_loop=True, adj_norm=False, adj_symmetric=True, t=None):
+    """
+    load feature, label, adj, M according to the value of k.
+    If k is None, then load graph data, otherwise load non-graph data.
+    If cal_M is False, M is still set to None to remain the consistency of the number of function return values.
+    Meanwhile, you can specify the datatype as 'tensor' or 'npy'.
+
+    :param k: To distinguish the data is graph data or non-graph data. 'None' denotes graph and int denotes non-graph.
+    :param dataset_path: The store path of dataset.
+    :param dataset_name: The name of dataset.
+    :param feature_type: The datatype of feature. 'tensor' and 'npy' are available.
+    :param adj_type: The datatype of adj. 'tensor' and 'npy' are available.
+    :param label_type: The datatype of label. 'tensor' and 'npy' are available.
+    :param adj_loop: Whether the adj has self-loop. If the value is True, the elements at the diagonal position is 1.
+    :param adj_norm: Whether to normalize the adj. Default is False.
+    :param adj_symmetric: Whether the normalization type is symmetric.
+    :param t: t in the formula of M
+    :return: feature, label, adj, M
+
+    """
+    # If the dataset is not graph dataset, use construct_graph to get KNN graph.
+    if k is None:
+        feature, label, adj = load_graph_data(dataset_path, dataset_name)
+    else:
+        feature, label = load_non_graph_data(dataset_path, dataset_name)
+        metric_dict = {"usps": "heat", "hhar": "cosine", "reut": "cosine"}
+        adj = construct_graph(feature, k, metric_dict[dataset_name])
+    # Whether the adj has self-loop, default is True.
+    if adj_loop:
+        adj = adj + np.eye(adj.shape[0])
+    # Whether calculate the matrix M
+    M = None
+    if t is not None:
+        M = get_M(adj, t)
+    # normalize the adj
+    if adj_norm:
+        adj = normalize_adj(adj, adj_symmetric)
+    # transform the datatype
+    if feature_type == "tensor":
+        feature = numpy_to_torch(feature)
+    if adj_type == "tensor":
+        adj = numpy_to_torch(adj)
+    if label_type == "tensor":
+        label = numpy_to_torch(label)
+    data = Data(feature, label, adj, M)
+    return data

@@ -17,7 +17,7 @@ from utils.evaluation import eva
 from utils.utils import count_parameters, get_format_variables
 
 
-def train(args, feature, label, adj, logger):
+def train(args, data, logger):
     args.embedding_dim = 10
     args.enc_1_dim = 500
     args.enc_2_dim = 500
@@ -25,6 +25,9 @@ def train(args, feature, label, adj, logger):
     args.dec_1_dim = 2000
     args.dec_2_dim = 500
     args.dec_3_dim = 500
+    args.adj_loop = True
+    args.adj_norm = True
+    args.adj_symmetric = True
     pretrain_ae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
 
     model = SDCN(input_dim=args.input_dim, embedding_dim=args.embedding_dim,
@@ -38,11 +41,12 @@ def train(args, feature, label, adj, logger):
 
     optimizer = Adam(model.parameters(), lr=args.lr)
 
-    data = data_processor.numpy_to_torch(feature).to(args.device).float()
-    adj = data_processor.normalize_adj(adj)
-    adj = data_processor.numpy_to_torch(adj).to(args.device).float()
+    feature = data.feature.to(args.device).float()
+    adj = data.adj.to(args.device).float()
+    label = data.label
+
     with torch.no_grad():
-        _, _, _, _, z = model.ae(data)
+        _, _, _, _, z = model.ae(feature)
 
     kmeans = KMeans(n_clusters=args.clusters, n_init=20)
     kmeans.fit_predict(z.data.cpu().numpy())
@@ -52,12 +56,12 @@ def train(args, feature, label, adj, logger):
     acc_max_corresponding_metrics = []
     for epoch in range(1, args.max_epoch + 1):
         model.train()
-        x_bar, q, pred, _, embedding = model(data, adj)
+        x_bar, q, pred, _, embedding = model(feature, adj)
         p = data_processor.target_distribution(q.data)
 
         kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
         ce_loss = F.kl_div(pred.log(), p, reduction='batchmean')
-        re_loss = F.mse_loss(x_bar, data)
+        re_loss = F.mse_loss(x_bar, feature)
         loss = 0.1 * kl_loss + 0.01 * ce_loss + re_loss
 
         optimizer.zero_grad()
@@ -66,7 +70,7 @@ def train(args, feature, label, adj, logger):
 
         with torch.no_grad():
             model.eval()
-            _, _, pred, _, embedding = model(data, adj)
+            _, _, pred, _, embedding = model(feature, adj)
             y_pred = pred.data.cpu().numpy().argmax(1)  # Z
             acc, nmi, ari, f1 = eva(label, y_pred)
             if acc > acc_max:

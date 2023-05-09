@@ -17,14 +17,12 @@ from utils import load_data, data_processor
 from utils.utils import get_format_variables
 
 
-def train(args, feature, label, adj, logger):
+def train(args, data, logger):
     """
     Using this function can pretrain the AE module and save the parameters file to specify directory
 
-    :param adj: the adjacency matrix, but here we don't use it just for unify the train function.
     :param args: the settings of the input model
-    :param feature: the feature of input dataset
-    :param label: the groundtruth label of data
+    :param data:
     :param logger: the logger object created in main.py
     """
     args.embedding_dim = 10
@@ -43,7 +41,7 @@ def train(args, feature, label, adj, logger):
                enc_1_dim=args.enc_1_dim, enc_2_dim=args.enc_2_dim, enc_3_dim=args.enc_3_dim,
                dec_1_dim=args.dec_1_dim, dec_2_dim=args.dec_2_dim, dec_3_dim=args.dec_3_dim).to(args.device)
 
-    dataset = load_data.LoadDataset(feature)
+    dataset = load_data.LoadDataset(data.feature)
     train_loader = DataLoader(dataset, batch_size=256, shuffle=True)
     logger.info(model)
     optimizer = Adam(model.parameters(), args.pretrain_lr)
@@ -61,10 +59,10 @@ def train(args, feature, label, adj, logger):
 
         with torch.no_grad():
             model.eval()
-            x = data_processor.numpy_to_torch(feature).to(args.device).float()
+            x = data_processor.numpy_to_torch(data.feature).to(args.device).float()
             x_bar, _, _, _, z = model(x)
             kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z.data.cpu().numpy())
-            acc, nmi, ari, f1 = eva(label, kmeans.labels_)
+            acc, nmi, ari, f1 = eva(data.label, kmeans.labels_)
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]

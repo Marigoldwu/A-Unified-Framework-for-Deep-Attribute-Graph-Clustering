@@ -105,6 +105,7 @@ python main.py -M SDCN -S acm -N  -D Train_SDCN_1_iteration_on_the_ACM_dataset
 |  2   |  **SDCN**   | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) | [论文阅读03](https://www.marigold.website/readArticle?workId=103&author=Marigold&authorId=1000001) |         [link](https://github.com/bdy9527/SDCN)         |
 |  3   |  **AGCN**   | [《Attention-driven Graph Clustering Network》](https://arxiv.org/pdf/2108.05499.pdf) | [论文阅读04](https://www.marigold.website/readArticle?workId=105&author=Marigold&authorId=1000001) | [link](https://github.com/ZhihaoPENG-CityU/MM21---AGCN) |
 |  4   | **EFR-DGC** | [《Deep Graph clustering with enhanced <br> feature representations for community detection》](https://link.springer.com/article/10.1007/s10489-022-03381-y) | [论文阅读12](https://www.marigold.website/readArticle?workId=140&author=Marigold&authorId=1000001) |        [link](https://github.com/grcai/DGC-EFR)         |
+|  5   |  **GCAE**   |          :exclamation: ​In fact, it's GAE with GCN.           |                              -                               |                            -                            |
 
 ##  🍊 Advanced
 

@@ -11,35 +11,34 @@ import importlib
 
 from utils.options import parser
 from dataset import dataset_info
-from utils import load_data, logger, time_manager, path_manager, plot, rand, data_processor
+from utils import logger, time_manager, path_manager, plot, rand
+from utils.load_data import load_data
 from utils.utils import cal_mean_std, record_metrics
 
 if __name__ == "__main__":
+    # setup random seed to ensure that the experiment can be reproduced
     rand.setup_seed(325)
-    args = parser.parse_args()
 
+    args = parser.parse_args()
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
+    # get the information of dataset
     args = dataset_info.get_dataset_info(args)
+    # get the relative path or absolute path
     args = path_manager.get_path(args)
 
     # Configuration of logger and timer module.
     # The logger print the training log to the specified file and the timer record training's time assuming.
-    logger_file_name = f"{time_manager.get_format_time()}.log"
-    logger = logger.MyLogger(args.model_name, log_file_path=args.log_save_path + logger_file_name)
+    logger = logger.MyLogger(args.model_name, log_file_path=f"{args.log_save_path}{time_manager.get_format_time()}.log")
     logger.info("The key points of this experiment: " + args.desc)
     logger.info(str(args))
 
     timer = time_manager.MyTime()
 
     # Load data, including features, label, adjacency matrix.
-    # If the dataset is not graph dataset, use construct_graph to get KNN graph.
-    # Note: the store format of data is numpy, and the adj has no self-loop.
-    if args.k is None:
-        feature, label, adj = load_data.load_graph_data(args.dataset_path, args.dataset_name)
-    else:
-        feature, label = load_data.load_data(args.dataset_path, args.dataset_name)
-        metric_dict = {"usps": "heat", "hhar": "cosine", "reut": "cosine"}
-        adj = data_processor.construct_graph(feature, args.k, metric_dict[args.dataset_name])
+    data = load_data(args.k, args.dataset_path, args.dataset_name,
+                     feature_type=args.feature_type, label_type=args.label_type, adj_type=args.adj_type,
+                     adj_loop=args.adj_loop, adj_norm=args.adj_norm, adj_symmetric=args.adj_symmetric,
+                     t=args.t)
 
     # Auto import the training module of the model you specified.
     model_train = importlib.import_module(f"model.{args.model_name}.train")
@@ -49,10 +48,10 @@ if __name__ == "__main__":
     acc_list, nmi_list, ari_list, f1_list = [], [], [], []
     # repeat args.loops rounds
     for i in range(args.loops):
-        logger.info(f"==================Training loop No.{i + 1}==================")
+        logger.info(f"{'=' * 20}Training loop No.{i + 1}{'=' * 20}")
         timer.start()
         # call the training function of your specified model
-        embedding, max_acc_corresponding_metrics = train(args, feature, label, adj, logger)
+        embedding, max_acc_corresponding_metrics = train(args, data, logger)
 
         seconds, minutes = timer.stop()
         logger.info("Time consuming: {}s or {}m".format(seconds, minutes))
@@ -62,7 +61,7 @@ if __name__ == "__main__":
                                                                max_acc_corresponding_metrics)
         # draw the clustering image or embedding heatmap
         if args.plot_clustering_tsne:
-            plot.plot_clustering_tsne(args, embedding, label, logger, desc=f"{i}", title=None, axis_show=False)
+            plot.plot_clustering_tsne(args, embedding, data.label, logger, desc=f"{i}", title=None, axis_show=False)
         if args.plot_embedding_heatmap:
             plot.plot_embedding_heatmap(args, embedding, logger, desc=f"{i}", title=None,
                                         axis_show=False, color_bar_show=True)

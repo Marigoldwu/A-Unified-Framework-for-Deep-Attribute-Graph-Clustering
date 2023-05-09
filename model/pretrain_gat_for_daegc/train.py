@@ -11,12 +11,11 @@ import torch.nn.functional as F
 from sklearn.cluster import KMeans
 from module.GAT_for_DAEGC import GAT
 from torch.optim import Adam
-from utils import data_processor
 from utils.evaluation import eva
 from utils.utils import get_format_variables
 
 
-def train(args, feature, label, adj, logger):
+def train(args, data, logger):
     args.hidden_size = 256
     args.embedding_size = 16
     args.alpha = 0.2
@@ -30,18 +29,19 @@ def train(args, feature, label, adj, logger):
     logger.info(model)
     optimizer = Adam(model.parameters(), args.pretrain_lr)
 
-    M = data_processor.get_M(adj, args.t).to(args.device)
+    M = data.M.to(args.device)
 
-    adj = data_processor.numpy_to_torch(adj).to(args.device).float()
+    adj = data.adj.to(args.device).float()
     adj_label = adj
 
-    data = data_processor.numpy_to_torch(feature).to(args.device).float()
+    feature = data.feature.to(args.device).float()
+    label = data.label
 
     acc_max = 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
-        A_pred, _ = model(data, adj, M)
+        A_pred, _ = model(feature, adj, M)
         loss = F.binary_cross_entropy(A_pred.view(-1), adj_label.view(-1))
         optimizer.zero_grad()
         loss.backward()
@@ -49,7 +49,7 @@ def train(args, feature, label, adj, logger):
 
         with torch.no_grad():
             model.eval()
-            A_pred, r = model(data, adj, M)
+            A_pred, r = model(feature, adj, M)
             kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(r.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(label, kmeans.labels_)
             if acc > acc_max:
