@@ -25,11 +25,11 @@ parser.add_argument("-SLF", "--self_loop_false", dest="adj_loop", default=True, 
                     help="Whether the adj has self-loop, default is True. Using '-SLF' to load adj without self-loop.")
 parser.add_argument("-SF", "--symmetric_false", dest="adj_symmetric", default=True, action="store_false",
                     help="Whether the normalization type is symmetric. Using '-SF' to load asymmetric adj.")
-parser.add_argument("-D", "--desc", type=str, default="default",
+parser.add_argument("-DS", "--desc", type=str, default="default",
                     help="The description of this experiment.")
 parser.add_argument("-M", "--model", type=str, dest="model_name", default="SDCN",
                     help="The model you want to run.")
-parser.add_argument("-DS", '--dataset', type=str, dest="dataset_name", default="acm",
+parser.add_argument("-D", '--dataset', type=str, dest="dataset_name", default="acm",
                     help="The dataset you want to use.")
 parser.add_argument("-R", "--root", type=str, default=None,
                     help="Input root path to switch relative path to absolute.")

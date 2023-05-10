@@ -64,15 +64,15 @@ pip install -r requirements.txt
 ```shell
 python main.py --pretrain --model pretrain_gat_for_daegc --dataset acm  --t 2 --desc pretrain_the_GAT_for_DAEGC_on_acm
 # or the simplified command:
-python main.py -P -M pretrain_gat_for_daegc -S acm -T 2 -D pretrain_the_GAT_for_DAEGC_on_acm
+python main.py -P -M pretrain_gat_for_daegc -D acm -T 2 -DS pretrain_the_GAT_for_DAEGC_on_acm
 ```
 
 :two: **train DAEGC:**
 
 ```shell
-python main.py --model DAEGC --dataset cora -T 2 -D Train_DAEGC_1_iteration_on_the_ACM_dataset
+python main.py --model DAEGC --dataset cora --t 2 -desc Train_DAEGC_1_iteration_on_the_ACM_dataset
 # or the simplified command:
-python main.py -M DAEGC -S cora -T 2 -D Train_DAEGC_1_iteration_on_the_ACM_dataset
+python main.py -M DAEGC -D cora -T 2 -DS Train_DAEGC_1_iteration_on_the_ACM_dataset
 ```
 
 ####  Example 2
@@ -84,15 +84,15 @@ python main.py -M DAEGC -S cora -T 2 -D Train_DAEGC_1_iteration_on_the_ACM_datas
 ```shell
 python main.py --pretrain --model pretrain_ae_for_sdcn --dataset acm --desc pretrain_ae_for_SDCN_on_acm
 # or simplified command:
-python main.py -P -M pretrain_ae_for_sdcn -S acm -D pretrain_ae_for_SDCN_on_acm
+python main.py -P -M pretrain_ae_for_sdcn -D acm -DS pretrain_ae_for_SDCN_on_acm
 ```
 
 :two: **train SDCN:**
 
 ```shell
-python main.py --model SDCN --dataset acm -N --desc Train_SDCN_1_iteration_on_the_ACM_dataset
+python main.py --model SDCN --dataset acm --norm --desc Train_SDCN_1_iteration_on_the_ACM_dataset
 # or simplified command:
-python main.py -M SDCN -S acm -N  -D Train_SDCN_1_iteration_on_the_ACM_dataset
+python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 ```
 
 ✈️ `Step 4`: If you run the code successfully, don't forget give me a star! :wink:
@@ -117,8 +117,8 @@ python main.py -M SDCN -S acm -N  -D Train_SDCN_1_iteration_on_the_ACM_dataset
 
 ```shell
 > python main.py --help
-usage: main.py [-h] [-P] [-TS] [-H] [-N] [-SLF] [-SF] [-D DESC]
-               [-M MODEL_NAME] [-DS DATASET_NAME] [-R ROOT] [-K K] [-T T]
+usage: main.py [-h] [-P] [-TS] [-H] [-N] [-SLF] [-SF] [-DS DESC]
+               [-M MODEL_NAME] [-D DATASET_NAME] [-R ROOT] [-K K] [-T T]
                [-LS LOOPS] [-F {tensor,npy}] [-L {tensor,npy}]
                [-A {tensor,npy}]
 
@@ -139,10 +139,10 @@ optional arguments:
   -SF, --symmetric_false
                         Whether the normalization type is symmetric. Using
                         '-SF' to load asymmetric adj.
-  -D DESC, --desc DESC  The description of this experiment.
+  -DS DESC, --desc DESC  The description of this experiment.
   -M MODEL_NAME, --model MODEL_NAME
                         The model you want to run.
-  -DS DATASET_NAME, --dataset DATASET_NAME
+  -D DATASET_NAME, --dataset DATASET_NAME
                         The dataset you want to use.
   -R ROOT, --root ROOT  Input root path to switch relative path to absolute.
   -K K, --k K           The k of KNN.
@@ -173,12 +173,12 @@ optional arguments:
 | 🟦    | <span style="color: blue">--self_loop_false</span> | -SLF  | Whether the adj has self-loop, default is True.<br> Using '-SLF' to load adj without self-loop. | "store_false" |   True    |
 | 🟦    | <span style="color: blue">--symmetric_false</span> |  -SF  | Whether the normalization type is symmetric.<br> Using '-SF' to load asymmetric adj. | "store_false" |   True    |
 | 🟥    |      <span style="color: red">--model</span>       |  -M   | The model you want to train.  <br>  **Should** correspond to the model in the model directory. |      str      |  "SDCN"   |
-| 🟥    |     <span style="color: red">--dataset</span>      |  -DS  | The dataset you want to train. <br> **Should** correspond to the dataset name in the dataset directory. |      str      |   "acm"   |
+| 🟥    |     <span style="color: red">--dataset</span>      |  -D   | The dataset you want to train. <br> **Should** correspond to the dataset name in the dataset directory. |      str      |   "acm"   |
 | 🟦    |        <span style="color: blue">--k</span>        |  -K   | For graph dataset, it is set to None. <br> If the dataset is not graph type, <br> you should set k to construct '**KNN**' graph of dataset. |      int      |   None    |
 | 🟦    |        <span style="color: blue">--t</span>        |  -T   | If the model need to get the matrix M, such as DAEGC, <br> you should set t according to the paper. <br> None denotes the model needn't M. |      int      |   None    |
 | 🟥    |      <span style="color: red">--loops</span>       |  -LS  | The training times. If you want to train the model <br> for 10 times, you can set it to 10. |      int      |     1     |
 | 🟥    |       <span style="color: red">--root</span>       |  -R   | If you need to change the relative path to the <br> absolute path,  you can set it to root path. |      str      |   None    |
-| 🟪    |     <span style="color: purple">--desc</span>      |  -D   |             The description of this experiment.              |      str      | "default" |
+| 🟪    |     <span style="color: purple">--desc</span>      |  -DS  |             The description of this experiment.              |      str      | "default" |
 | 🟦    |     <span style="color: blue">--feature</span>     |  -F   | The datatype of feature.<br> 'tenor' and 'npy' are available. |      str      | "tensor"  |
 | 🟦    |      <span style="color: blue">--label</span>      |  -L   | The datatype of label.<br> 'tenor' and 'npy' are available.  |      str      |   "npy"   |
 | 🟦    |       <span style="color: blue">--adj</span>       |  -A   |  The datatype of adj.<br> 'tenor' and 'npy' are available.   |      str      | "tensor"  |
