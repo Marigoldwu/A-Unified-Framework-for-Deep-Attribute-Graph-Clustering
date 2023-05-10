@@ -21,7 +21,7 @@ def train(args, data, logger):
     args.alpha = 0.2
     args.weight_decay = 5e-3
 
-    pretrain_gae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
+    pretrain_gat_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
     model = GAT(num_features=args.input_dim,
                 hidden_size=args.hidden_size,
                 embedding_size=args.embedding_size,
@@ -58,5 +58,5 @@ def train(args, data, logger):
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
-    torch.save(model.state_dict(), pretrain_gae_filename)
+    torch.save(model.state_dict(), pretrain_gat_filename)
     return r, acc_max_corresponding_metrics
