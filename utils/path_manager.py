@@ -41,6 +41,8 @@ def get_path(args):
                               "EFRDGC": ["pretrain_ae", "pretrain_gat"],
                               "GCSEE": ["pretrain_ae", "pretrain_gat"],
                               "GCAE": ["pretrain_gae"],
+                              "FDAEGC": ["pretrain_gat"],
+                              "RSGC": ["pretrain_gat"],
                               "DFCN": []}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
@@ -80,7 +82,7 @@ def get_path(args):
         args.log_save_path = replace_relative_path(args.log_save_path, root)
         args.dataset_path = replace_relative_path(args.dataset_path, root)
         args.clustering_tsne_save_path = replace_relative_path(args.clustering_tsne_save_path, root)
-        args.embedding_heatmap_save_path = replace_relative_path(args.feature_heatmap_save_path, root)
+        args.embedding_heatmap_save_path = replace_relative_path(args.embedding_heatmap_save_path, root)
         if pretrain_type == "multi":
             for item in pretrain_type_list:
                 type_name = item.split("_")[-1]
