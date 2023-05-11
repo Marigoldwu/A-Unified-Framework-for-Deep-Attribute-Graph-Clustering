@@ -201,7 +201,7 @@ Strong scalability is a prominent feature of this framework. If you want to run 
 
 🚄 `Step 2`: If your model need to be pretrained, you need to write a pretraining file `train.py `and put it into a directory named after pretrain\_{module(lowercase)} \_for\_{model (lowercase)}, then put it into the model directory. We provide the template file in the template directory.
 
-🚄 `Step 3`: Modify the pretrain_type_dict in line 38 in `path_manager.py`. The format is "model name(uppercase)": [items]. If your model needn't be pretrained, let the list null. Otherwise, you should list all modules you need to pretrain. For example, if you want to pretrain AE module, you should add "pretrain_ae" to the list.
+🚄 `Step 3`: Modify the pretrain_type_dict in line 38 in `path_manager.py`. The format is "model name(uppercase)": [items]. If your model needn't be pretrained, let the list null. Otherwise, you should list all modules you need to pretrain. For example, if you want to pretrain AE module, you should add "pretrain_ae" to the list. Meanwhile, please check whether the pretrain type  exists in if-else sentence, if not, please add it manually.
 
 🚄 `Step 4`: Run your code!
 
