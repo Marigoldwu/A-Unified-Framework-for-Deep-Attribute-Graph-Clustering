@@ -59,7 +59,7 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            x = data_processor.numpy_to_torch(data.feature).to(args.device).float()
+            x = data.feature.to(args.device).float()
             x_bar, _, _, _, z = model(x)
             kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(data.label, kmeans.labels_)
