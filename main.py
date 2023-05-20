@@ -15,6 +15,7 @@ from utils import logger, time_manager, path_manager, plot, rand
 from utils.load_data import load_data
 from utils.utils import cal_mean_std, record_metrics
 
+
 if __name__ == "__main__":
     # setup random seed to ensure that the experiment can be reproduced
     rand.setup_seed(325)
@@ -63,7 +64,7 @@ if __name__ == "__main__":
         if args.plot_clustering_tsne:
             plot.plot_clustering_tsne(args, embedding, data.label, logger, desc=f"{i}", title=None, axis_show=False)
         if args.plot_embedding_heatmap:
-            plot.plot_embedding_heatmap(args, embedding, logger, desc=f"{i}", title=None,
+            plot.plot_embedding_heatmap(args, torch.matmul(embedding, embedding.t()), logger, desc=f"{i}", title=None,
                                         axis_show=False, color_bar_show=True)
 
     logger.info("Total loops: {}".format(args.loops))
