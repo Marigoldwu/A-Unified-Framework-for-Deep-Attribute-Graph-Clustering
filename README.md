@@ -217,7 +217,7 @@ Strong scalability is a prominent feature of this framework. If you want to run 
 
 ## 🍎 Ending
 
-> Graph deep clustering is currently in a stage of rapid development, and more graph clustering methods will be proposed in the future. Therefore, providing a unified code framework can save researchers' coding and experiment time, and put more energy on it. In terms of theoretical innovation. It is believed that graph clustering will reach a higher level in the future.
+> Graph deep clustering is currently in a stage of rapid development, and more graph clustering methods will be proposed in the future. Therefore, providing a unified code framework can save researchers' coding and experiment time, and put more energy on the theoretical innovation. It is believed that graph clustering will reach a higher level in the future.
 >
 > If this warehouse is helpful to you, please remember to Star~😘.
 
