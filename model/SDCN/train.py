@@ -25,9 +25,6 @@ def train(args, data, logger):
     args.dec_1_dim = 2000
     args.dec_2_dim = 500
     args.dec_3_dim = 500
-    args.adj_loop = True
-    args.adj_norm = True
-    args.adj_symmetric = True
     pretrain_ae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
 
     model = SDCN(input_dim=args.input_dim, embedding_dim=args.embedding_dim,
