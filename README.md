@@ -8,7 +8,7 @@ Recently, attribute graph clustering has developed rapidly, at the same time var
 
 Thanks for the open source of these authors (not listed in order):
 
-\[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Liam Liu](https://github.com/Tiger101010) | [Zhihao PENG](https://github.com/ZhihaoPENG-CityU) | [William Zhu](https://github.com/grcai) | [WxTu](https://github.com/WxTu)\]
+\[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Liam Liu](https://github.com/Tiger101010) | [Zhihao PENG](https://github.com/ZhihaoPENG-CityU) | [William Zhu](https://github.com/grcai) | [WxTu](https://github.com/WxTu) \]
 
 <a href="https://github.com/yueliu1999" target="_blank"><img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999" width="48" height="48"/></a> <a href="https://github.com/bdy9527" target="_blank"><img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527" width="48" height="48"/></a> <a href="https://github.com/Tiger101010" target="_blank"><img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu" width="48" height="48"/></a> <a href="https://github.com/ZhihaoPENG-CityU" target="_blank"><img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG" width="48" height="48"/> </a><a href="https://github.com/grcai" target="_blank"><img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu" width="48" height="48"/></a> <a href="https://github.com/WxTu" target="_blank"><img src="https://avatars.githubusercontent.com/u/50702801?v=4" height="48" width="48" alt="WxTu"></a>
 
@@ -110,7 +110,7 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 
 > :exclamation: **Attention**
 >
-> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, pretrain DFCN formally at least 200 epochs. 
+> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. 
 >
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
 
