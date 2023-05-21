@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description='Scalable Unified Framework of Deep
 # Sometimes when faced with many experimental result files, we don't remember which experiment it was.
 # So, join me in forming the habit of recording the key points of the experiment!
 # Describe the key points of this experiment in brief words with --desc balabala.
-# You can record whatever you want to!
+# You can record whatever you want!
 parser.add_argument("-P", '--pretrain', dest="is_pretrain", default=False, action="store_true",
                     help="Whether to pretrain. Using '-P' to pretrain.")
 parser.add_argument("-TS", "--tsne", dest="plot_clustering_tsne", default=False, action="store_true",

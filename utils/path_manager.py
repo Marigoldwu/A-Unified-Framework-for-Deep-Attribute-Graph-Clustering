@@ -41,9 +41,9 @@ def get_path(args):
                               "EFRDGC": ["pretrain_ae", "pretrain_gat"],
                               "GCSEE": ["pretrain_ae", "pretrain_gat"],
                               "GCAE": ["pretrain_gae"],
-                              "FDAEGC": ["pretrain_gat"],
+                              "FDAEGC": ["pretrain_fgat"],
                               "RSGC": ["pretrain_gat"],
-                              "DFCN": []}
+                              "DFCN": ["pretrain_ae", "pretrain_igae"]}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
         if len(pretrain_type_list) == 1:
@@ -66,8 +66,17 @@ def get_path(args):
         args.pretrain_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_gae":
         args.pretrain_save_path = "./pretrain/pretrain_gae/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_igae":
+        args.pretrain_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_gat":
         args.pretrain_save_path = "./pretrain/pretrain_gat/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_igat":
+        args.pretrain_save_path = "./pretrain/pretrain_igat/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_fgat":
+        args.pretrain_save_path = "./pretrain/pretrain_fgat/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_both":
+        args.pretrain_ae_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
+        args.pretrain_igae_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type is None:
         args.pretrain_save_path = ""
     elif pretrain_type == "multi":
@@ -93,7 +102,7 @@ def get_path(args):
     if not os.path.exists(args.log_save_path):
         os.makedirs(args.log_save_path)
     if not os.path.exists(args.dataset_path):
-        raise FileNotFoundError(f"{args.clustering_tsne_save_path} not found!")
+        raise FileNotFoundError(f"{args.dataset_path} not found!")
     if args.plot_clustering_tsne and not os.path.exists(args.clustering_tsne_save_path):
         os.makedirs(args.clustering_tsne_save_path)
     if args.plot_embedding_heatmap and not os.path.exists(args.embedding_heatmap_save_path):
@@ -104,6 +113,8 @@ def get_path(args):
             path = getattr(args, f"pretrain_{type_name}_save_path")
             if not os.path.exists(path):
                 raise FileNotFoundError(f"{path} not found!")
+    elif pretrain_type == "pretrain_both":
+        pass
     elif pretrain_type != "none":
         if not os.path.exists(args.pretrain_save_path):
             os.makedirs(args.pretrain_save_path)
