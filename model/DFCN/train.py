@@ -78,7 +78,7 @@ def train(args, data, logger):
     kmeans.fit_predict(z_tilde.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
-    acc_max, embedding = 0, 0
+    acc_max, z_tilde = 0, 0
     acc_max_corresponding_metrics = []
     for epoch in range(1, args.max_epoch + 1):
         model.train()
@@ -110,4 +110,4 @@ def train(args, data, logger):
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.max_memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The max memory allocated to model is: {mem_used:.2f} MB.")
-    return embedding, acc_max_corresponding_metrics
+    return z_tilde, acc_max_corresponding_metrics

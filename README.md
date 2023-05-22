@@ -107,12 +107,81 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 |  4   | **EFR-DGC** | [《Deep Graph clustering with enhanced <br> feature representations for community detection》](https://link.springer.com/article/10.1007/s10489-022-03381-y) | [论文阅读12](https://www.marigold.website/readArticle?workId=140&author=Marigold&authorId=1000001) |        [link](https://github.com/grcai/DGC-EFR)         |
 |  5   |  **GCAE**   |          :exclamation: ​In fact, it's GAE with GCN.           |                              -                               |                            -                            |
 |  6   |  **DFCN**   | [《Deep Fusion Clustering Network》](https://arxiv.org/pdf/2012.09600.pdf) | [论文阅读09](https://www.marigold.website/readArticle?workId=137&author=Marigold&authorId=1000001) |          [link](https://github.com/WxTu/DFCN)           |
+|  7   |  **HSAN**   | [《Hard Sample Aware Network for <br>Contrastive Deep Graph Clustering》](https://arxiv.org/pdf/2212.08665) |                              -                               |       [link](https://github.com/yueliu1999/HSAN)        |
 
 > :exclamation: **Attention**
 >
 > 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. 
+> 2. The HSAN model does not require pretraining.
 >
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
+
+### :robot: ​Commands
+
+
+
+#### :alien: ​DAEGC
+
+```shell
+# pretrain
+python main.py -P -M pretrain_gat_for_daegc -D acm -T 2 -DS balabala -LS 1
+# train
+python main.py -M DAEGC -D acm -T 2 -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: ​SDCN
+
+```shell
+# pretrain
+python main.py -P -M pretrain_ae_for_sdcn -D acm -DS balabala -LS 1
+# train
+python main.py -M SDCN -D acm -N -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: ​AGCN
+
+```shell
+# pretrain
+python main.py -P -M pretrain_ae_for_agcn -D acm -DS balabala -LS 1
+# train
+python main.py -M AGCN -D acm -N -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: ​EFR-DGC
+
+```shell
+# pretrain
+python main.py -P -M pretrain_gat_for_efrdgc -D acm -T 2 -DS balabala -LS 1
+# train
+python main.py -M EFRDGC -D acm -T 2 -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: ​GCAE
+
+```shell
+# pretrain
+python main.py -P -M pretrain_gae_for_gcae -D acm -N -DS balabala -LS 1
+# train
+python main.py -M GCAE -D acm -N -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: ​DFCN
+
+```shell
+# pretrain. Execute the following commands in sequence.
+python main.py -P -M pretrain_ae_for_dfcn -D acm -DS balabala -LS 1
+python main.py -P -M pretrain_igae_for_dfcn -D acm -N -DS balabala -LS 1
+python main.py -P -M pretrain_both_for_dfcn -D acm -N -DS balabala -LS 1
+# train
+python main.py -M DFCN -D acm -N -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: HSAN
+
+```shell
+# train
+python main.py -M HSAN -D cora -SLF -A npy -F npy -DS balabala -LS 1 -TS
+```
 
 ##  🍊 Advanced
 

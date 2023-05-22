@@ -17,9 +17,6 @@ from utils.utils import cal_mean_std, record_metrics
 
 
 if __name__ == "__main__":
-    # setup random seed to ensure that the experiment can be reproduced
-    rand.setup_seed(325)
-
     args = parser.parse_args()
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
     # get the information of dataset
@@ -49,7 +46,10 @@ if __name__ == "__main__":
     acc_list, nmi_list, ari_list, f1_list = [], [], [], []
     # repeat args.loops rounds
     for i in range(args.loops):
+        # setup random seed to ensure that the experiment can be reproduced
+        rand.setup_seed(i)
         logger.info(f"{'=' * 20}Training loop No.{i + 1}{'=' * 20}")
+        logger.info(f"random seed: {i}")
         timer.start()
         # call the training function of your specified model
         embedding, max_acc_corresponding_metrics = train(args, data, logger)

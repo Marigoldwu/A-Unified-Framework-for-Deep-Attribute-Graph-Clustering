@@ -43,7 +43,8 @@ def get_path(args):
                               "GCAE": ["pretrain_gae"],
                               "FDAEGC": ["pretrain_fgat"],
                               "RSGC": ["pretrain_gat"],
-                              "DFCN": ["pretrain_ae", "pretrain_igae"]}
+                              "DFCN": ["pretrain_ae", "pretrain_igae"],
+                              "HSAN": []}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
         if len(pretrain_type_list) == 1:
@@ -78,7 +79,7 @@ def get_path(args):
         args.pretrain_ae_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
         args.pretrain_igae_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type is None:
-        args.pretrain_save_path = ""
+        pass
     elif pretrain_type == "multi":
         pass
     else:
@@ -97,7 +98,7 @@ def get_path(args):
                 type_name = item.split("_")[-1]
                 exec(f"args.pretrain_{type_name}_save_path = "
                      f"replace_relative_path(args.pretrain_{type_name}_save_path, root_path)")
-        elif pretrain_type != "none":
+        elif pretrain_type is not None:
             args.pretrain_save_path = replace_relative_path(args.pretrain_save_path, root)
     if not os.path.exists(args.log_save_path):
         os.makedirs(args.log_save_path)
@@ -115,7 +116,7 @@ def get_path(args):
                 raise FileNotFoundError(f"{path} not found!")
     elif pretrain_type == "pretrain_both":
         pass
-    elif pretrain_type != "none":
+    elif pretrain_type is not None:
         if not os.path.exists(args.pretrain_save_path):
             os.makedirs(args.pretrain_save_path)
     return args

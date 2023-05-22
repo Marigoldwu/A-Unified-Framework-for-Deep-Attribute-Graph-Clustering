@@ -64,9 +64,8 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            _, _, Q = model(feature, adj, M)
-            q = Q.data.cpu().numpy().argmax(1)
-            acc, nmi, ari, f1 = eva(label, q)
+            pred = q.data.cpu().numpy().argmax(1)
+            acc, nmi, ari, f1 = eva(label, pred)
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
