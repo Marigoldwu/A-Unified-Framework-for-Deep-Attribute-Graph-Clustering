@@ -98,7 +98,7 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 
 ✈️ `Step 4`: If you run the code successfully, don't forget give me a star! :wink:
 
-### 🔓 Support Models Currently
+### 🔓 Currently Supported Models
 
 | No.  |    Model    |                            Paper                             |                           Analysis                           |                       Source Code                       |
 | :--: | :---------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
