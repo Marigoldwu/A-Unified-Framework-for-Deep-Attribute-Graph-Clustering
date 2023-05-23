@@ -35,6 +35,7 @@ On the basis of ADGC, I refactored the code to make the deep clustering code ach
   - 🎲 `rand.py`: It includes the function of set random seed.
   - 🛠️ `utils.py`: It includes the tools function from pervious file, such as `get_format_variables()` from `fomatter.py`.
   - ⚙️ `options.py`: It includes the argparse object.
+  - :dash: `kmeans_gpu.py`: It contains the GPU-accelerated K-means algorithm
 - 📁 `logs`: The directory is used to **store the output logs files**. Its subdirectories are named after the model names and the logs files are named after the start time.
 - 📁 `pretrain`:  The directory is used to **store the pre-training parameters files**. Its subdirectories are named after the format of pretrain\_{module name}. Parameters files are categorized by model and dataset name.
 - 🖼️`img`: The directory is used to **store the output images**, whose subdirectories are named after **clustering** and **heatmap**.
@@ -117,8 +118,6 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
 
 ### :robot: ​Commands
-
-
 
 #### :alien: ​DAEGC
 
