@@ -45,3 +45,5 @@ parser.add_argument("-L", "--label", dest="label_type", type=str, default="npy",
                     help="The datatype of label. 'tenor' and 'npy' are available.")
 parser.add_argument("-A", "--adj", dest="adj_type", type=str, default="tensor", choices=["tensor", "npy"],
                     help="The datatype of adj. 'tenor' and 'npy' are available.")
+parser.add_argument("-S", "--seed", type=int, default=0,
+                    help="The random seed. The default value is 0.")

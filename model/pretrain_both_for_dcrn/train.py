@@ -1,35 +1,36 @@
 # -*- coding: utf-8 -*-
 """
-@Time: 2023/5/20 16:12 
+@Time: 2023/5/23 19:39 
 @Author: Marigold
 @Version: 0.0.0
 @Description：
 @WeChat Account: Marigold
 """
-
 import torch
 import torch.nn.functional as F
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from torch.optim import Adam
 
-from module.AE_and_IGAE_for_DFCN import AE_IGAE
-from utils.data_processor import normalize_adj, construct_graph, numpy_to_torch
+from module.AE_and_IGAE_for_DCRN import AE_IGAE
+from utils.data_processor import numpy_to_torch
 from utils.evaluation import eva
 from utils.utils import get_format_variables
 
 
 def train(args, data, logger):
-    param_dict = {'acm': [100, 5e-5, 100],
-                  'cite': [100, 1e-4, 100],
-                  'cora': [100, 1e-4, 50],
-                  'dblp': [100, 1e-4, 50],
-                  'reut': [100, 1e-4, 100],
-                  'hhar': [100, 1e-3, 50],
-                  'usps': [100, 1e-3, 30]}
-    args.pretrain_epoch = param_dict[args.dataset_name][0]
-    args.pretrain_lr = param_dict[args.dataset_name][1]
-    args.n_input = param_dict[args.dataset_name][2]
+    param_dict = {
+        "acm": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 100},
+        "dblp": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 50},
+        "cite": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 100},
+        "amap": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 100}
+    }
+    args.pretrain_epoch = 100
+    args.pretrain_lr = param_dict[args.dataset_name]["lr"]
+    args.n_input = param_dict[args.dataset_name]["n_input"]
+    args.alpha = 0.1
+    args.beta = 0.01
+    args.omega = 0.1
     args.embedding_dim = 20
     args.ae_n_enc_1 = 128
     args.ae_n_enc_2 = 256
@@ -43,8 +44,6 @@ def train(args, data, logger):
     args.gae_n_dec_1 = 20
     args.gae_n_dec_2 = 256
     args.gae_n_dec_3 = 128
-    args.gamma_value = 0.1
-    args.lambda_value = 10
     pretrain_ae_filename = args.pretrain_ae_save_path + args.dataset_name + ".pkl"
     pretrain_igae_filename = args.pretrain_igae_save_path + args.dataset_name + ".pkl"
     logger.info("The pretraining ae .pkl file will be saved to the path: " + pretrain_ae_filename)
@@ -63,35 +62,24 @@ def train(args, data, logger):
 
     pca = PCA(n_components=args.n_input)
     X_pca = pca.fit_transform(data.feature)
-    adj = data.adj.to(args.device).float()
-    if args.k is not None:
-        adj = construct_graph(X_pca, args.k, metric='heat').to(args.device).float()
-        if args.adj_loop:
-            adj = adj + torch.eye(adj.shape[0]).to(args.device).float()
-        if args.adj_norm:
-            adj = normalize_adj(adj, args.adj_symmetric).float()
-    label = data.label
     X_pca = numpy_to_torch(X_pca).to(args.device).float()
-
-    with torch.no_grad():
-        _, _, _, z_tilde = model(X_pca, adj)
-
-    kmeans = KMeans(n_clusters=args.clusters, n_init=20)
-    kmeans.fit_predict(z_tilde.data.cpu().numpy())
-    model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
+    adj = data.adj.to(args.device).float()
+    label = data.label
 
     acc_max, z_tilde = 0, 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
 
     for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
-        x_hat, adj_hat, z_hat, z_tilde = model(X_pca, adj)
 
-        loss_ae = F.mse_loss(x_hat, X_pca)
-        loss_w = F.mse_loss(z_hat, torch.mm(adj, X_pca))
-        loss_a = F.mse_loss(adj_hat, adj)
-        loss_igae = loss_w + args.gamma_value * loss_a
-        loss = loss_ae + loss_igae
+        x_hat, z_hat, adj_hat, z_ae, z_igae, z_tilde = model(X_pca, adj)
+
+        loss_1 = F.mse_loss(x_hat, X_pca)
+        loss_2 = F.mse_loss(z_hat, torch.spmm(adj, X_pca))
+        loss_3 = F.mse_loss(adj_hat, adj)
+
+        loss_4 = F.mse_loss(z_ae, z_igae)
+        loss = loss_1 + args.alpha * loss_2 + args.beta * loss_3 + args.omega * loss_4
 
         optimizer.zero_grad()
         loss.backward()

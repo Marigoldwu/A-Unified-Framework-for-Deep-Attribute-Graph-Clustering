@@ -109,11 +109,13 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 |  5   |  **GCAE**   |          :exclamation: ​In fact, it's GAE with GCN.           |                              -                               |                            -                            |
 |  6   |  **DFCN**   | [《Deep Fusion Clustering Network》](https://arxiv.org/pdf/2012.09600.pdf) | [论文阅读09](https://www.marigold.website/readArticle?workId=137&author=Marigold&authorId=1000001) |          [link](https://github.com/WxTu/DFCN)           |
 |  7   |  **HSAN**   | [《Hard Sample Aware Network for <br>Contrastive Deep Graph Clustering》](https://arxiv.org/pdf/2212.08665) |                              -                               |       [link](https://github.com/yueliu1999/HSAN)        |
+|  8   |  **DCRN**   | [《Deep Graph Clustering via<br> Dual Correlation Reduction》](https://ojs.aaai.org/index.php/AAAI/article/view/20726/20485) |                              -                               |       [link](https://github.com/yueliu1999/DCRN)        |
 
 > :exclamation: **Attention**
 >
-> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. 
+> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. So is DCRN!
 > 2. The HSAN model does not require pretraining.
+> 3. The results in the DCRN paper have not yet been reproduced, and will continue to be updated in the future.
 >
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
 
@@ -182,6 +184,17 @@ python main.py -M DFCN -D acm -N -DS balabala -LS 1 -TS -H
 python main.py -M HSAN -D cora -SLF -A npy -F npy -DS balabala -LS 1 -TS
 ```
 
+#### :alien: DCRN
+
+```shell
+# pretrain. Execute the following commands in sequence.
+python main.py -P -M pretrain_ae_for_dcrn -D acm -S 1 -DS balabala -LS 1
+python main.py -P -M pretrain_igae_for_dcrn -D acm -N -SF -S 1 -DS balabala -LS 1
+python main.py -P -M pretrain_both_for_dcrn -D acm -N -SF -S 1 -DS balabala -LS 1
+# train
+python main.py -M DCRN -D acm -SLF -A npy -S 3 -DS balabala -LS 1 -TS -H
+```
+
 ##  🍊 Advanced
 
 ### :exclamation: ​Arguments
@@ -193,7 +206,7 @@ python main.py -M HSAN -D cora -SLF -A npy -F npy -DS balabala -LS 1 -TS
 usage: main.py [-h] [-P] [-TS] [-H] [-N] [-SLF] [-SF] [-DS DESC]
                [-M MODEL_NAME] [-D DATASET_NAME] [-R ROOT] [-K K] [-T T]
                [-LS LOOPS] [-F {tensor,npy}] [-L {tensor,npy}]
-               [-A {tensor,npy}]
+               [-A {tensor,npy}] [-S SEED]
 
 Scalable Unified Framework of Deep Graph Clustering
 
@@ -212,7 +225,8 @@ optional arguments:
   -SF, --symmetric_false
                         Whether the normalization type is symmetric. Using
                         '-SF' to load asymmetric adj.
-  -DS DESC, --desc DESC  The description of this experiment.
+  -DS DESC, --desc DESC
+                        The description of this experiment.
   -M MODEL_NAME, --model MODEL_NAME
                         The model you want to run.
   -D DATASET_NAME, --dataset DATASET_NAME
@@ -231,6 +245,7 @@ optional arguments:
                         available.
   -A {tensor,npy}, --adj {tensor,npy}
                         The datatype of adj. 'tenor' and 'npy' are available.
+  -S SEED, --seed SEED  The random seed. The default value is 0.
 ```
 
 #### 🍹 Details
@@ -255,6 +270,7 @@ optional arguments:
 | 🟦    |     <span style="color: blue">--feature</span>     |  -F   | The datatype of feature.<br> 'tenor' and 'npy' are available. |      str      | "tensor"  |
 | 🟦    |      <span style="color: blue">--label</span>      |  -L   | The datatype of label.<br> 'tenor' and 'npy' are available.  |      str      |   "npy"   |
 | 🟦    |       <span style="color: blue">--adj</span>       |  -A   |  The datatype of adj.<br> 'tenor' and 'npy' are available.   |      str      | "tensor"  |
+| 🟥    |       <span style="color: red">--seed</span>       |  -S   |          The random seed. It is 0 if not specified.          |      int      |     0     |
 
 > 💡 **Tips:**
 >

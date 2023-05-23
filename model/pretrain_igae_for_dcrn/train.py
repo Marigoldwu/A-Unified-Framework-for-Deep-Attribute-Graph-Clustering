@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@Time: 2023/5/20 15:17 
+@Time: 2023/5/23 19:32 
 @Author: Marigold
 @Version: 0.0.0
 @Description：
@@ -12,29 +12,28 @@ from sklearn.decomposition import PCA
 from torch.optim import Adam
 from sklearn.cluster import KMeans
 from module.IGAE import IGAE
-from utils.data_processor import construct_graph, normalize_adj, numpy_to_torch
+from utils.data_processor import numpy_to_torch
 from utils.evaluation import eva
 from utils.utils import get_format_variables
 
 
 def train(args, data, logger):
-    param_dict = {'acm': [30, 5e-5, 100],
-                  'cite': [30, 1e-4, 100],
-                  'cora': [30, 1e-4, 50],
-                  'dblp': [30, 1e-4, 50],
-                  'reut': [30, 1e-4, 100],
-                  'hhar': [30, 1e-3, 50],
-                  'usps': [30, 1e-3, 30]}
-    args.pretrain_epoch = param_dict[args.dataset_name][0]
-    args.pretrain_lr = param_dict[args.dataset_name][1]
-    args.n_input = param_dict[args.dataset_name][2]
+    param_dict = {
+        "acm": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 100},
+        "dblp": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 50},
+        "cite": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 100},
+        "amap": {"alpha_value": 0.2, "lambda_value": 10, "gamma_value": 1e3, "lr": 1e-3, "n_input": 100}
+    }
+    args.pretrain_epoch = 30
+    args.pretrain_lr = param_dict[args.dataset_name]["lr"]
+    args.n_input = param_dict[args.dataset_name]["n_input"]
+    args.gamma_value = param_dict[args.dataset_name]["gamma_value"]
     args.gae_n_enc_1 = 128
     args.gae_n_enc_2 = 256
     args.gae_n_enc_3 = 20
     args.gae_n_dec_1 = 20
     args.gae_n_dec_2 = 256
     args.gae_n_dec_3 = 128
-    args.gamma_value = 0.1
     pretrain_igae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
     logger.info("The pretrain .pkl file will be saved to the path: " + pretrain_igae_filename)
     model = IGAE(args.dataset_name, args.gae_n_enc_1, args.gae_n_enc_2, args.gae_n_enc_3,
@@ -45,12 +44,6 @@ def train(args, data, logger):
     pca = PCA(n_components=args.n_input)
     X_pca = pca.fit_transform(data.feature)
     adj = data.adj.to(args.device).float()
-    if args.k is not None:
-        adj = construct_graph(X_pca, args.k, metric='heat').to(args.device).float()
-        if args.adj_loop:
-            adj = adj + torch.eye(adj.shape[0]).to(args.device).float()
-        if args.adj_norm:
-            adj = normalize_adj(adj, args.adj_symmetric).float()
     label = data.label
 
     acc_max, z_igae = 0, 0

@@ -194,3 +194,82 @@ def pseudo_matrix(P, S, node_num, beta, device="cuda"):
     M_mat = torch.abs(Q - S_norm) ** beta
     M = torch.cat([torch.diag(M_mat, node_num), torch.diag(M_mat, -node_num)], dim=0)
     return M, M_mat
+
+
+def diffusion_adj(adj, mode="ppr", transport_rate=0.2):
+    """
+    graph diffusion
+    :param adj: input adj matrix
+    :param mode: the mode of graph diffusion
+    :param transport_rate: the transport rate
+    - personalized page rank
+    -
+    :return: the graph diffusion
+    """
+    # add the self_loop
+    adj_tmp = adj + np.eye(adj.shape[0])
+
+    # calculate degree matrix and it's inverse matrix
+    d = np.diag(adj_tmp.sum(0))
+    d_inv = np.linalg.inv(d)
+    sqrt_d_inv = np.sqrt(d_inv)
+
+    # calculate norm adj
+    norm_adj = np.matmul(np.matmul(sqrt_d_inv, adj_tmp), sqrt_d_inv)
+
+    # calculate graph diffusion
+    if mode == "ppr":
+        diff_adj = transport_rate * np.linalg.inv((np.eye(d.shape[0]) - (1 - transport_rate) * norm_adj))
+    else:
+        diff_adj = None
+    return diff_adj
+
+
+def remove_edge(A, similarity, remove_rate=0.1, device="cuda"):
+    """
+    remove edge based on embedding similarity
+    Args:
+        A: the origin adjacency matrix
+        similarity: cosine similarity matrix of embedding
+        remove_rate: the rate of removing linkage relation
+        device:
+    Returns:
+        Am: edge-masked adjacency matrix
+    """
+    # remove edges based on cosine similarity of embedding
+    n_node = A.shape[0]
+    for i in range(n_node):
+        A[i, torch.argsort(similarity[i].cpu())[:int(round(remove_rate * n_node))]] = 0
+
+    # normalize adj
+    A = A + torch.eye(A.shape[0])
+    Am = normalize_adj(A, symmetry=False)
+    Am = Am.to(device)
+    return Am
+
+
+def gaussian_noised_feature(X, device="cuda"):
+    """
+    add gaussian noise to the attribute matrix X
+    Args:
+        X: the attribute matrix
+        device:
+    Returns: the noised attribute matrix X_tilde
+    """
+    N_1 = torch.Tensor(np.random.normal(1, 0.1, X.shape)).to(device)
+    N_2 = torch.Tensor(np.random.normal(1, 0.1, X.shape)).to(device)
+    X_tilde1 = X * N_1
+    X_tilde2 = X * N_2
+    return X_tilde1, X_tilde2
+
+
+def off_diagonal(x):
+    """
+    off-diagonal elements of x
+    Args:
+        x: the input matrix
+    Returns: the off-diagonal elements of x
+    """
+    n, m = x.shape
+    assert n == m
+    return x.flatten()[:-1].view(n - 1, n + 1)[:, 1:].flatten()

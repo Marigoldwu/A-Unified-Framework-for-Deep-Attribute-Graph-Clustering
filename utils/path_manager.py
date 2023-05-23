@@ -44,6 +44,7 @@ def get_path(args):
                               "FDAEGC": ["pretrain_fgat"],
                               "RSGC": ["pretrain_gat"],
                               "DFCN": ["pretrain_ae", "pretrain_igae"],
+                              "DCRN": ["pretrain_ae", "pretrain_igae"],
                               "HSAN": []}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
