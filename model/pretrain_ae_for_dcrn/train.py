@@ -17,6 +17,7 @@ from sklearn.cluster import KMeans
 from utils import load_data
 from utils.data_processor import numpy_to_torch
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import get_format_variables
 
 
@@ -48,7 +49,7 @@ def train(args, data, logger):
     train_loader = DataLoader(dataset, batch_size=256, shuffle=True)
     logger.info(model)
     optimizer = Adam(model.parameters(), args.pretrain_lr)
-    acc_max, z = 0, 0
+    acc_max, embedding = 0, None
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
@@ -62,8 +63,8 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            _, z_ae = model(numpy_to_torch(X_pca).to(args.device).float())
-            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z_ae.data.cpu().numpy())
+            _, embedding = model(numpy_to_torch(X_pca).to(args.device).float())
+            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(embedding.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(data.label, kmeans.labels_)
             if acc > acc_max:
                 acc_max = acc
@@ -72,4 +73,5 @@ def train(args, data, logger):
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.state_dict(), pretrain_ae_filename)
-    return z, acc_max_corresponding_metrics
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    return result

@@ -20,6 +20,7 @@ Attention!The attributes below are the completed name which you can use args. to
     - adj_type                              the datatype of adj, "tensor" and "npy" are available, default "tensor"
 
 - related to experiments
+    - seed                                  the random seed
     - is_pretrain                           is this experiment pretraining, default value is False
     - loops                                 the number of training rounds
     - desc                                  the description of this experiments. please don't use space between words, you can use '_' to connect

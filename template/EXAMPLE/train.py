@@ -53,7 +53,7 @@ def train(args, data, logger):
     kmeans.fit_predict(z.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
     
-    acc_max = 0
+    acc_max, embedding = 0, None
     max_acc_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch+1):
         model.train()
@@ -80,12 +80,13 @@ def train(args, data, logger):
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
-
+    
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
     
     # the format of return is solid, if you want to change, remember to change the corresponding place in main.py
-    return embedding, acc_max_corresponding_metrics
+    return result
 """

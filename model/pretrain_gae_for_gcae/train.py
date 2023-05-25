@@ -12,6 +12,7 @@ from torch.optim import Adam
 from sklearn.cluster import KMeans
 from module.GAE import GAE
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import get_format_variables
 
 
@@ -32,7 +33,7 @@ def train(args, data, logger):
     adj_label = adj
     label = data.label
 
-    acc_max = 0
+    acc_max, embedding = 0, None
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.pretrain_epoch+1):
         model.train()
@@ -54,4 +55,5 @@ def train(args, data, logger):
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.state_dict(), pretrain_gae_filename)
-    return embedding, acc_max_corresponding_metrics
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    return result

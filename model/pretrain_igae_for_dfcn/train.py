@@ -14,6 +14,7 @@ from sklearn.cluster import KMeans
 from module.IGAE import IGAE
 from utils.data_processor import construct_graph, normalize_adj, numpy_to_torch
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import get_format_variables
 
 
@@ -53,12 +54,12 @@ def train(args, data, logger):
             adj = normalize_adj(adj, args.adj_symmetric).float()
     label = data.label
 
-    acc_max, z_igae = 0, 0
+    acc_max, embedding = 0, 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     X_pca = numpy_to_torch(X_pca).to(args.device).float()
     for epoch in range(1, args.pretrain_epoch+1):
         model.train()
-        z_igae, z_hat, adj_hat = model(X_pca, adj)
+        embedding, z_hat, adj_hat = model(X_pca, adj)
         loss_w = F.mse_loss(z_hat, torch.mm(adj, X_pca))
         loss_a = F.mse_loss(adj_hat, adj)
         loss = loss_w + args.gamma_value * loss_a
@@ -68,7 +69,7 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z_igae.data.cpu().numpy())
+            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(embedding.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(label, kmeans.labels_)
             if acc > acc_max:
                 acc_max = acc
@@ -77,4 +78,5 @@ def train(args, data, logger):
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.state_dict(), pretrain_igae_filename)
-    return z_igae, acc_max_corresponding_metrics
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    return result

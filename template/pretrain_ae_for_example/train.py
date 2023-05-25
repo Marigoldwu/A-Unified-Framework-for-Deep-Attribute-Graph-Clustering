@@ -14,5 +14,6 @@ def train(args, data, logger):
     
     # write your code here, if not necessary, please don't change the return value.
     
-    return embedding, max_acc_corresponding_metrics
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    return result
 """

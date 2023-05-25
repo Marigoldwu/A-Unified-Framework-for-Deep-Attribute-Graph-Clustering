@@ -14,6 +14,7 @@ from model.DAEGC.model import DAEGC
 from utils import data_processor
 from sklearn.cluster import KMeans
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import count_parameters, get_format_variables
 
 
@@ -42,16 +43,16 @@ def train(args, data, logger):
     with torch.no_grad():
         _, z = model.gat(feature, adj, M)
 
-    # get kmeans and pretrain cluster result
+    # using the result of pretraining to init clustering centers
     kmeans = KMeans(n_clusters=args.clusters, n_init=20)
     kmeans.fit_predict(z.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
-    acc_max = 0
+    acc_max, embedding = 0, None
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch + 1):
         model.train()
-        A_pred, z, q = model(feature, adj, M)
+        A_pred, embedding, q = model(feature, adj, M)
         p = data_processor.target_distribution(q.data)
 
         kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
@@ -64,16 +65,16 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            pred = q.data.cpu().numpy().argmax(1)
-            acc, nmi, ari, f1 = eva(label, pred)
+            pred_q = q.data.cpu().numpy().argmax(1)
+            acc, nmi, ari, f1 = eva(label, pred_q)
             if acc > acc_max:
                 acc_max = acc
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
-
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
-    return z, acc_max_corresponding_metrics
+    return result

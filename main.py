@@ -31,7 +31,6 @@ if __name__ == "__main__":
     # The logger print the training log to the specified file and the timer record training's time assuming.
     logger = logger.MyLogger(args.model_name, log_file_path=f"{args.log_save_path}{time_manager.get_format_time()}.log")
     logger.info("The key points of this experiment: " + args.desc)
-    logger.info(str(args))
 
     timer = time_manager.MyTime()
 
@@ -53,21 +52,22 @@ if __name__ == "__main__":
         logger.info(f"random seed: {i}")
         timer.start()
         # call the training function of your specified model
-        embedding, max_acc_corresponding_metrics = train(args, data, logger)
+        result = train(args, data, logger)
 
         seconds, minutes = timer.stop()
         logger.info("Time consuming: {}s or {}m".format(seconds, minutes))
 
         # record the max value of each loop
         acc_list, nmi_list, ari_list, f1_list = record_metrics(acc_list, nmi_list, ari_list, f1_list,
-                                                               max_acc_corresponding_metrics)
+                                                               result.max_acc_corresponding_metrics)
         # draw the clustering image or embedding heatmap
         if args.plot_clustering_tsne:
-            plot.plot_clustering_tsne(args, embedding, data.label, logger, desc=f"{i}", title=None, axis_show=False)
+            plot.plot_clustering_tsne(args, result.embedding, data.label, logger, desc=f"{i}", title=None, axis_show=False)
         if args.plot_embedding_heatmap:
-            plot.plot_embedding_heatmap(args, torch.matmul(embedding, embedding.t()), logger, desc=f"{i}", title=None,
+            plot.plot_embedding_heatmap(args, torch.matmul(result.embedding, result.embedding.t()), logger, desc=f"{i}", title=None,
                                         axis_show=False, color_bar_show=True)
 
+    logger.info(str(args))
     logger.info("Total loops: {}".format(args.loops))
     logger.info("Mean value:")
     logger.info(cal_mean_std(acc_list, nmi_list, ari_list, f1_list))

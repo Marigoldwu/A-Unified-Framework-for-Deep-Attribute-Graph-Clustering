@@ -17,6 +17,7 @@ from sklearn.cluster import KMeans
 from utils import data_processor
 from utils.data_processor import construct_graph, normalize_adj, numpy_to_torch
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import count_parameters, get_format_variables
 
 
@@ -78,11 +79,11 @@ def train(args, data, logger):
     kmeans.fit_predict(z_tilde.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
-    acc_max, z_tilde = 0, 0
-    acc_max_corresponding_metrics = []
+    acc_max, embedding = 0, None
+    acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch + 1):
         model.train()
-        x_hat, z_hat, adj_hat, z_ae, z_igae, q, q1, q2, z_tilde = model(X_pca, adj)
+        x_hat, z_hat, adj_hat, z_ae, z_igae, q, q1, q2, embedding = model(X_pca, adj)
         tmp_q = q.data
         p = data_processor.target_distribution(tmp_q)
 
@@ -97,7 +98,7 @@ def train(args, data, logger):
         loss.backward()
         optimizer.step()
 
-        kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z_tilde.data.cpu().numpy())
+        kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(embedding.data.cpu().numpy())
 
         acc, nmi, ari, f1 = eva(label, kmeans.labels_)
         if acc > acc_max:
@@ -105,9 +106,9 @@ def train(args, data, logger):
             acc_max_corresponding_metrics = [acc, nmi, ari, f1]
         logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                          ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
-
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.max_memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The max memory allocated to model is: {mem_used:.2f} MB.")
-    return z_tilde, acc_max_corresponding_metrics
+    return result

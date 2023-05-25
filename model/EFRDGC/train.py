@@ -15,6 +15,7 @@ from sklearn.cluster import KMeans
 
 from utils import data_processor
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import count_parameters, get_format_variables
 
 
@@ -70,11 +71,11 @@ def train(args, data, logger):
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
     # training
-    acc_max = 0
+    acc_max, embedding = 0, None
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch+1):
         model.train()
-        A_pred, z, q, x_bar = model(feature, adj, M)
+        A_pred, embedding, q, x_bar = model(feature, adj, M, args.sigma)
         p = data_processor.target_distribution(q.data)
 
         kl_loss = F.kl_div(q.log(), p, reduction='batchmean')
@@ -89,8 +90,7 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            _, _, pred, _ = model(feature, adj, M, args.sigma)
-            y_pred = pred.cpu().numpy().argmax(1)
+            y_pred = q.data.cpu().numpy().argmax(1)
             acc, nmi, ari, f1 = eva(label, y_pred)
             # record the max value
             if acc > acc_max:
@@ -98,9 +98,9 @@ def train(args, data, logger):
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
-
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
-    return z, acc_max_corresponding_metrics
+    return result

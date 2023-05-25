@@ -16,6 +16,7 @@ from torch.optim import Adam
 from module.AE_and_IGAE_for_DFCN import AE_IGAE
 from utils.data_processor import normalize_adj, construct_graph, numpy_to_torch
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import get_format_variables
 
 
@@ -80,12 +81,12 @@ def train(args, data, logger):
     kmeans.fit_predict(z_tilde.data.cpu().numpy())
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
-    acc_max, z_tilde = 0, 0
+    acc_max, embedding = 0, 0
     acc_max_corresponding_metrics = [0, 0, 0, 0]
 
     for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
-        x_hat, adj_hat, z_hat, z_tilde = model(X_pca, adj)
+        x_hat, adj_hat, z_hat, embedding = model(X_pca, adj)
 
         loss_ae = F.mse_loss(x_hat, X_pca)
         loss_w = F.mse_loss(z_hat, torch.mm(adj, X_pca))
@@ -99,7 +100,7 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(z_tilde.data.cpu().numpy())
+            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(embedding.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(label, kmeans.labels_)
             if acc > acc_max:
                 acc_max = acc
@@ -109,4 +110,5 @@ def train(args, data, logger):
 
     torch.save(model.ae.state_dict(), pretrain_ae_filename)
     torch.save(model.igae.state_dict(), pretrain_igae_filename)
-    return z_tilde, acc_max_corresponding_metrics
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    return result

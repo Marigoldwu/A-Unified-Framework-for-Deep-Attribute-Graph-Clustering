@@ -12,6 +12,7 @@ from sklearn.cluster import KMeans
 from module.GAT_for_EFRDGC import GAT
 from torch.optim import Adam
 from utils.evaluation import eva
+from utils.result import Result
 from utils.utils import get_format_variables
 
 
@@ -35,14 +36,14 @@ def train(args, data, logger):
     adj = data.adj.to(args.device).float()
     adj_label = adj
 
-    data = data.feature.to(args.device).float()
+    feature = data.feature.to(args.device).float()
     label = data.label
 
-    acc_max = 0
+    acc_max, embedding = 0, None
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
-        A_pred, _ = model(data, adj, M, 0, 0, 0, 0)
+        A_pred, embedding = model(feature, adj, M, 0, 0, 0, 0)
         loss = F.binary_cross_entropy(A_pred.view(-1), adj_label.view(-1))
         optimizer.zero_grad()
         loss.backward()
@@ -51,8 +52,7 @@ def train(args, data, logger):
 
         with torch.no_grad():
             model.eval()
-            A_pred, r = model(data, adj, M, 0, 0, 0, 0)
-            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(r.data.cpu().numpy())
+            kmeans = KMeans(n_clusters=args.clusters, n_init=20).fit(embedding.data.cpu().numpy())
             acc, nmi, ari, f1 = eva(label, kmeans.labels_)
             if acc > acc_max:
                 acc_max = acc
@@ -61,4 +61,5 @@ def train(args, data, logger):
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.state_dict(), pretrain_gae_filename)
-    return r, acc_max_corresponding_metrics
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    return result

@@ -15,6 +15,7 @@ from utils.data_processor import laplacian_filtering, comprehensive_similarity, 
     high_confidence, pseudo_matrix, numpy_to_torch
 from utils.evaluation import eva
 from utils.kmeans_gpu import kmeans
+from utils.result import Result
 from utils.utils import get_format_variables, count_parameters
 
 
@@ -66,7 +67,7 @@ def train(args, data, logger):
     mask = torch.ones([args.nodes * 2, args.nodes * 2]) - torch.eye(args.nodes * 2)
     mask = mask.to(args.device)
 
-    acc_max, Z = 0, 0
+    acc_max, embedding = 0, None
     acc_max_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(args.max_epoch):
         model.train()
@@ -94,13 +95,14 @@ def train(args, data, logger):
             S = comprehensive_similarity(Z1, Z2, E1, E2, model.alpha)
 
             # fusion and testing
-            Z = (Z1 + Z2) / 2
-            predict_labels, centers = kmeans(X=Z, num_clusters=args.clusters, distance="euclidean", device="cuda")
+            embedding = (Z1 + Z2) / 2
+            predict_labels, centers = kmeans(X=embedding, num_clusters=args.clusters,
+                                             distance="euclidean", device="cuda")
             P = predict_labels.numpy()
             acc, nmi, ari, f1 = eva(label, P)
 
             # select high confidence samples
-            H, H_mat = high_confidence(Z, centers, args.tao)
+            H, H_mat = high_confidence(embedding, centers, args.tao)
 
             # calculate new weight of sample pair by Eq. (9)
             M, M_mat = pseudo_matrix(P, S, args.nodes, args.beta, args.device)
@@ -114,9 +116,9 @@ def train(args, data, logger):
                 acc_max_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
-
+    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
     logger.info(f"The total memory allocated to model is: {mem_used:.2f} MB.")
-    return Z, acc_max_corresponding_metrics
+    return result
