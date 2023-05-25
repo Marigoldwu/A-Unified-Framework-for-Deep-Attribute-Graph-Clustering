@@ -36,6 +36,7 @@ On the basis of ADGC, I refactored the code to make the deep clustering code ach
   - 🛠️ `utils.py`: It includes the tools function from pervious file, such as `get_format_variables()` from `fomatter.py`.
   - ⚙️ `options.py`: It includes the argparse object.
   - :dash: `kmeans_gpu.py`: It contains the GPU-accelerated K-means algorithm
+  - :bar_chart: `result.py`: Defining a Result class to unify the return value.​
 - 📁 `logs`: The directory is used to **store the output logs files**. Its subdirectories are named after the model names and the logs files are named after the start time.
 - 📁 `pretrain`:  The directory is used to **store the pre-training parameters files**. Its subdirectories are named after the format of pretrain\_{module name}. Parameters files are categorized by model and dataset name.
 - 🖼️`img`: The directory is used to **store the output images**, whose subdirectories are named after **clustering** and **heatmap**.
