@@ -82,7 +82,7 @@ def train(args, data, logger):
     model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
 
     acc_max, embedding = 0, 0
-    acc_max_corresponding_metrics = [0, 0, 0, 0]
+    max_acc_corresponding_metrics = [0, 0, 0, 0]
 
     for epoch in range(1, args.pretrain_epoch + 1):
         model.train()
@@ -104,11 +104,11 @@ def train(args, data, logger):
             acc, nmi, ari, f1 = eva(label, kmeans.labels_)
             if acc > acc_max:
                 acc_max = acc
-                acc_max_corresponding_metrics = [acc, nmi, ari, f1]
+                max_acc_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.ae.state_dict(), pretrain_ae_filename)
     torch.save(model.igae.state_dict(), pretrain_igae_filename)
-    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    result = Result(embedding=embedding, max_acc_corresponding_metrics=max_acc_corresponding_metrics)
     return result

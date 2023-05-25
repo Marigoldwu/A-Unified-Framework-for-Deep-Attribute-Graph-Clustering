@@ -72,7 +72,7 @@ def train(args, data, logger):
 
     # training
     acc_max, embedding = 0, None
-    acc_max_corresponding_metrics = [0, 0, 0, 0]
+    max_acc_corresponding_metrics = [0, 0, 0, 0]
     for epoch in range(1, args.max_epoch+1):
         model.train()
         A_pred, embedding, q, x_bar = model(feature, adj, M, args.sigma)
@@ -95,10 +95,10 @@ def train(args, data, logger):
             # record the max value
             if acc > acc_max:
                 acc_max = acc
-                acc_max_corresponding_metrics = [acc, nmi, ari, f1]
+                max_acc_corresponding_metrics = [acc, nmi, ari, f1]
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
-    result = Result(embedding=embedding, acc_max_corresponding_metrics=acc_max_corresponding_metrics)
+    result = Result(embedding=embedding, max_acc_corresponding_metrics=max_acc_corresponding_metrics)
     # Get the network parameters
     logger.info("The total number of parameters is: " + str(count_parameters(model)) + "M(1e6).")
     mem_used = torch.cuda.memory_allocated(device=args.device) / 1024 / 1024
