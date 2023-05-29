@@ -20,7 +20,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # setup random seed to ensure that the experiment can be reproduced
     rand.setup_seed(args.seed)
-
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
     # get the information of dataset
     args = dataset_info.get_dataset_info(args)
@@ -31,7 +30,7 @@ if __name__ == "__main__":
     # The logger print the training log to the specified file and the timer record training's time assuming.
     logger = logger.MyLogger(args.model_name, log_file_path=f"{args.log_save_path}{time_manager.get_format_time()}.log")
     logger.info("The key points of this experiment: " + args.desc)
-
+    logger.info(f"random seed: {args.seed}")
     timer = time_manager.MyTime()
 
     # Load data, including features, label, adjacency matrix.
@@ -49,7 +48,6 @@ if __name__ == "__main__":
     # repeat args.loops rounds
     for i in range(args.loops):
         logger.info(f"{'=' * 20}Training loop No.{i + 1}{'=' * 20}")
-        logger.info(f"random seed: {i}")
         timer.start()
         # call the training function of your specified model
         result = train(args, data, logger)
@@ -62,9 +60,11 @@ if __name__ == "__main__":
                                                                result.max_acc_corresponding_metrics)
         # draw the clustering image or embedding heatmap
         if args.plot_clustering_tsne:
-            plot.plot_clustering_tsne(args, result.embedding, data.label, logger, desc=f"{i}", title=None, axis_show=False)
+            plot.plot_clustering_tsne(args, result.embedding, data.label,
+                                      logger, desc=f"{i}", title=None, axis_show=False)
         if args.plot_embedding_heatmap:
-            plot.plot_embedding_heatmap(args, torch.matmul(result.embedding, result.embedding.t()), logger, desc=f"{i}", title=None,
+            plot.plot_embedding_heatmap(args, torch.matmul(result.embedding, result.embedding.t()),
+                                        logger, desc=f"{i}", title=None,
                                         axis_show=False, color_bar_show=True)
 
     logger.info(str(args))
