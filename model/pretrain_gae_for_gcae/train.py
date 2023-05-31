@@ -20,13 +20,12 @@ def train(args, data, logger):
     args.hidden_dim = 256
     args.embedding_dim = 16
     args.weight_decay = 5e-3
-    args.adj_loop = True
-    args.adj_norm = True
-    args.adj_symmetric = True
+    args.pretrain_epoch = 50
+    args.pretrain_lr = 1e-3
     pretrain_gae_filename = args.pretrain_save_path + args.dataset_name + ".pkl"
     model = GAE(args.input_dim, args.hidden_dim, args.embedding_dim).to(args.device)
     logger.info(model)
-    optimizer = Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = Adam(model.parameters(), lr=args.pretrain_lr, weight_decay=args.weight_decay)
 
     feature = data.feature.to(args.device).float()
     adj = data.adj.to(args.device).float()
