@@ -9,10 +9,10 @@
 
 
 class Result:
-    def __init__(self, embedding=None, acc_max_corresponding_metrics=None, loss=None,
+    def __init__(self, embedding=None, max_acc_corresponding_metrics=None, loss=None,
                  acc=None, acc_p=None, acc_q=None, acc_q_ae=None, acc_q_igae=None):
         self.embedding = embedding
-        self.acc_max_corresponding_metrics = acc_max_corresponding_metrics
+        self.max_acc_corresponding_metrics = max_acc_corresponding_metrics
         self.loss = loss
         self.acc = acc
         self.acc_p = acc_p
