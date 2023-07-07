@@ -153,6 +153,7 @@ python main.py -M AGCN -D acm -N -DS balabala -LS 1 -TS -H
 
 ```shell
 # pretrain
+python main.py -P -M pretrain_ae_for_efrdgc -D acm -DS balabala -LS 1
 python main.py -P -M pretrain_gat_for_efrdgc -D acm -T 2 -DS balabala -LS 1
 # train
 python main.py -M EFRDGC -D acm -T 2 -DS balabala -LS 1 -TS -H
