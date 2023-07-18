@@ -8,6 +8,8 @@
 """
 import torch
 import torch.nn.functional as F
+import numpy as np
+
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from sklearn.cluster import KMeans
@@ -67,9 +69,13 @@ def train(args, data, logger):
             if acc > acc_max:
                 acc_max = acc
                 max_acc_corresponding_metrics = [acc, nmi, ari, f1]
+                max_embedding = embedding
             logger.info(get_format_variables(epoch=f"{epoch:0>3d}", acc=f"{acc:0>.4f}", nmi=f"{nmi:0>.4f}",
                                              ari=f"{ari:0>.4f}", f1=f"{f1:0>.4f}"))
 
     torch.save(model.state_dict(), pretrain_ae_filename)
-    result = Result(embedding=embedding, max_acc_corresponding_metrics=max_acc_corresponding_metrics)
+    # Sort F based on the sort indices
+    sort_indices = np.argsort(data.label)
+    max_embedding = max_embedding[sort_indices]
+    result = Result(embedding=max_embedding, max_acc_corresponding_metrics=max_acc_corresponding_metrics)
     return result

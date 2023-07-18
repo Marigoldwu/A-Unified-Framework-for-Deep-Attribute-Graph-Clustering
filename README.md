@@ -2,7 +2,7 @@
 
 ☞ See the Chinese version in \[[Marigold](https://www.marigold.website/readArticle?workId=145&author=Marigold&authorId=1000001)\]
 
-Recently, attribute graph clustering has developed rapidly. At the same time various deep attribute graph clustering methods have sprung up. Although most of the methods are open source, it is a pity that these codes do not have a unified framework, which makes researchers have to spend a lot of time modifying the code to achieve the purpose of reproduction. Fortunately, Liu et al. \[Homepage: [yueliu1999](https://github.com/yueliu1999)\] organized the deep graph clustering method into a code warehouse—— [ Awesome-Deep-Graph-Clustering(ADGC)](https://github.com/yueliu1999/Awesome-Deep-Graph-Clustering). For example, they provided more than 20 datasets and unified the format. Moreover, they list the most related paper about deep graph clustering  and give the link of source code. It is worth mentioning that they organize the code of deep graph clustering into rand-augmentation-model-clustering-visualization-utils structure, which greatly facilitates beginners and researchers. Here, on behalf of myself, I would like to express my sincere thanks and high respect to Liu et al. 
+Recently, deep attribute graph clustering has developed rapidly. At the same time various  methods have sprung up. Although most of the methods are open-source, it is a pity that these codes do not have a unified framework, which makes researchers have to spend a lot of time modifying the code to achieve the purpose of reproduction. Fortunately, Liu et al. \[Homepage: [yueliu1999](https://github.com/yueliu1999)\] organized the deep graph clustering method into a code warehouse—— [ Awesome-Deep-Graph-Clustering(ADGC)](https://github.com/yueliu1999/Awesome-Deep-Graph-Clustering). For example, they provided more than 20 datasets and unified the format. Moreover, they list the most related paper about deep graph clustering  and give the link of source code. It is worth mentioning that they organize the code of deep graph clustering into rand-augmentation-model-clustering-visualization-utils structure, which greatly facilitates beginners and researchers. Here, on behalf of myself, I would like to express my sincere thanks and high respect to Liu et al. 
 
 ❤️ **Acknowledgements:**
 
@@ -10,7 +10,11 @@ Thanks for the open source of these authors (not listed in order):
 
 \[ [yueliu1999](https://github.com/yueliu1999) | [bdy9527](https://github.com/bdy9527)| [Liam Liu](https://github.com/Tiger101010) | [Zhihao PENG](https://github.com/ZhihaoPENG-CityU) | [William Zhu](https://github.com/grcai) | [WxTu](https://github.com/WxTu) \]
 
-<a href="https://github.com/yueliu1999" target="_blank"><img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999" width="48" height="48"/></a> <a href="https://github.com/bdy9527" target="_blank"><img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527" width="48" height="48"/></a> <a href="https://github.com/Tiger101010" target="_blank"><img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu" width="48" height="48"/></a> <a href="https://github.com/ZhihaoPENG-CityU" target="_blank"><img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG" width="48" height="48"/> </a><a href="https://github.com/grcai" target="_blank"><img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu" width="48" height="48"/></a> <a href="https://github.com/WxTu" target="_blank"><img src="https://avatars.githubusercontent.com/u/50702801?v=4" height="48" width="48" alt="WxTu"></a>
+[ [xihongyang1999](https://github.com/xihongyang1999) |  [gongleii](https://github.com/gongleii) \]
+
+<a href="https://github.com/yueliu1999" target="_blank"><img src="https://avatars.githubusercontent.com/u/41297969?s=64&v=4" alt="yueliu1999" width="48" height="48"/></a> <a href="https://github.com/bdy9527" target="_blank"><img src="https://avatars.githubusercontent.com/u/16743085?s=64&v=4" alt="bdy9527" width="48" height="48"/></a> <a href="https://github.com/Tiger101010" target="_blank"><img src="https://avatars.githubusercontent.com/u/34651180?s=64&v=4" alt="Liam Liu" width="48" height="48"/></a> <a href="https://github.com/ZhihaoPENG-CityU" target="_blank"><img src="https://avatars.githubusercontent.com/u/23076563?s=64&v=4" alt="Zhihao PENG" width="48" height="48"/> </a><a href="https://github.com/grcai" target="_blank"><img src="https://avatars.githubusercontent.com/u/38714987?s=64&v=4" alt="William Zhu" width="48" height="48"/></a> <a href="https://github.com/WxTu" target="_blank"><img src="https://avatars.githubusercontent.com/u/50702801?v=4" height="48" width="48" alt="WxTu"></a>  
+
+<a href="https://github.com/xihongyang1999" target="_blank"><img src="https://avatars.githubusercontent.com/u/94908575?v=4" height="48" width="48" alt="xihongyang1999"></a> <a href="https://github.com/gongleii" target="_blank"><img src="https://avatars.githubusercontent.com/u/43403230?v=4" height="48" width="48" alt="gongleii"></a> 
 
 ## 🍉 Introduction
 
@@ -111,6 +115,8 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 |  6   |  **DFCN**   | [《Deep Fusion Clustering Network》](https://arxiv.org/pdf/2012.09600.pdf) | [论文阅读09](https://www.marigold.website/readArticle?workId=137&author=Marigold&authorId=1000001) |          [link](https://github.com/WxTu/DFCN)           |
 |  7   |  **HSAN**   | [《Hard Sample Aware Network for <br>Contrastive Deep Graph Clustering》](https://arxiv.org/pdf/2212.08665) |                              -                               |       [link](https://github.com/yueliu1999/HSAN)        |
 |  8   |  **DCRN**   | [《Deep Graph Clustering via<br> Dual Correlation Reduction》](https://ojs.aaai.org/index.php/AAAI/article/view/20726/20485) |                              -                               |       [link](https://github.com/yueliu1999/DCRN)        |
+|  9   |  **CCGC**   | [《Cluster-guided Contrastive <br>Graph Clustering Network》](https://arxiv.org/pdf/2301.01098.pdf) |                              -                               |     [link](https://github.com/xihongyang1999/CCGC)      |
+|  10  | **AGC-DRR** | [《Attributed Graph Clustering <br>with Dual Redundancy Reduction》](https://www.ijcai.org/proceedings/2022/0418.pdf) |                              -                               |       [link](https://github.com/gongleii/AGC-DRR)       |
 
 > :exclamation: **Attention**
 >
@@ -195,6 +201,18 @@ python main.py -P -M pretrain_igae_for_dcrn -D acm -N -SF -S 1 -DS balabala -LS 
 python main.py -P -M pretrain_both_for_dcrn -D acm -N -SF -S 1 -DS balabala -LS 1
 # train
 python main.py -M DCRN -D acm -SLF -A npy -S 3 -DS balabala -LS 1 -TS -H
+```
+
+#### :alien: CCGC
+
+```bash
+python main.py -M CCGC -D acm -SLF -SF -A npy -S 0 -LS 1 -DS balabala
+```
+
+#### :alien: AGC-DRR
+
+```bash
+python main.py -M AGCDRR -D acm -F npy -S 0 -LS 1 -DS balabala
 ```
 
 ##  🍊 Advanced
@@ -300,9 +318,9 @@ Strong scalability is a prominent feature of this framework. If you want to run 
 
 🚌 `Step 1`: Make sure that your dataset are well processed and the file suffix is 'npy' which denotes the file store the numpy array. If your dataset is graph data, you need to include {dataset name}\_feat.npy、{dataset name}\_label.npy、{dataset name}\_adj.npy. If your dataset is non-graph data, there are two ways to handle. One is directly using {dataset name}\_feat.npy、{dataset name}\_label.npy, and set the type of constructing graph in line 167 in `load_data.py`. If the construct type not exists, please add it to the function `construct_graph` in `data\_processor.py`. Another is to construct graph data manually, and use {dataset name}\_feat.npy、{dataset name}\_label.npy、{dataset name}\_adj.npy, but you need remember what value the k used because the dataset is considered as graph dataset.
 
- 🚌 `Step 2`: Putting the file above to a directory named after the lowercase of dataset name. Then put them into the dataset directory.
+ 🚌 `Step 2`: Put the file above to a directory named after the lowercase of dataset name. Then put them into the dataset directory.
 
-🚌 `Step 3`: Adding the information about the dataset in the `dataset_info.py`.
+🚌 `Step 3`: Add the information about the dataset in the `dataset_info.py`.
 
 🚌 `Step 4`: Use your dataset!
 

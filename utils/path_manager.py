@@ -39,19 +39,12 @@ def get_path(args):
                               "SDCN": ["pretrain_ae"],
                               "AGCN": ["pretrain_ae"],
                               "EFRDGC": ["pretrain_ae", "pretrain_gat"],
-                              "GCSEE": ["pretrain_ae", "pretrain_gat"],
-                              "GSEECN": ["pretrain_ae", "pretrain_gat"],
                               "GCAE": ["pretrain_gae"],
-                              "FGCAE": ["pretrain_fgae"],
-                              "FDAEGC": ["pretrain_fgat"],
-                              "RSGC": ["pretrain_gat"],
                               "DFCN": ["pretrain_ae", "pretrain_igae"],
                               "DCRN": ["pretrain_ae", "pretrain_igae"],
-                              "MLP": ["pretrain_ae"],
-                              "GCMLP": [],
-                              "DAE": [],
-                              "DGAE": ["pretrain_gae"],
-                              "HSAN": []}
+                              "HSAN": [],
+                              "CCGC": [],
+                              "AGCDRR": []}
         pretrain_for = args.model_name
         pretrain_type_list = pretrain_type_dict[args.model_name]
         if len(pretrain_type_list) == 1:
@@ -76,14 +69,10 @@ def get_path(args):
         args.pretrain_save_path = "./pretrain/pretrain_gae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_igae":
         args.pretrain_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_fgae":
-        args.pretrain_save_path = "./pretrain/pretrain_fgae/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_gat":
         args.pretrain_save_path = "./pretrain/pretrain_gat/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_igat":
         args.pretrain_save_path = "./pretrain/pretrain_igat/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_fgat":
-        args.pretrain_save_path = "./pretrain/pretrain_fgat/" + pretrain_for + "/" + args.dataset_name + "/"
     elif pretrain_type == "pretrain_both":
         args.pretrain_ae_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
         args.pretrain_igae_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
