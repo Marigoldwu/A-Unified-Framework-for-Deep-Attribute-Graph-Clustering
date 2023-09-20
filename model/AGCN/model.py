@@ -77,10 +77,10 @@ class AGCN(nn.Module):
                      dec_2_dim,
                      dec_3_dim)
 
-        self.agcn_0 = GCN(input_dim, enc_1_dim)
-        self.agcn_1 = GCN(enc_1_dim, enc_2_dim)
-        self.agcn_2 = GCN(enc_2_dim, enc_3_dim)
-        self.agcn_3 = GCN(enc_3_dim, embedding_dim)
+        self.agcn_0 = GCN(input_dim, enc_1_dim, activeType='leaky_relu')
+        self.agcn_1 = GCN(enc_1_dim, enc_2_dim, activeType='leaky_relu')
+        self.agcn_2 = GCN(enc_2_dim, enc_3_dim, activeType='leaky_relu')
+        self.agcn_3 = GCN(enc_3_dim, embedding_dim, activeType='leaky_relu')
         self.agcn_z = GCN(3020, clusters, activeType="no")
 
         self.mlp = MLP_L(3020)

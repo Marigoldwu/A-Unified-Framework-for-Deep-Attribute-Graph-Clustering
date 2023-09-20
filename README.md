@@ -152,7 +152,7 @@ python main.py -M SDCN -D acm -N -DS balabala -LS 1 -TS -H
 # pretrain
 python main.py -P -M pretrain_ae_for_agcn -D acm -DS balabala -LS 1
 # train
-python main.py -M AGCN -D acm -N -DS balabala -LS 1 -TS -H
+python main.py -M AGCN -D acm -N -SF -DS balabala -LS 1 -TS -H
 ```
 
 #### :alien: ​EFR-DGC
