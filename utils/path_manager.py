@@ -91,12 +91,14 @@ def get_path(args):
         args.dataset_path = replace_relative_path(args.dataset_path, root)
         args.clustering_tsne_save_path = replace_relative_path(args.clustering_tsne_save_path, root)
         args.embedding_heatmap_save_path = replace_relative_path(args.embedding_heatmap_save_path, root)
-        if pretrain_type == "multi":
+        if pretrain_type == "multi" or pretrain_type == "pretrain_both":
             for item in pretrain_type_list:
                 type_name = item.split("_")[-1]
                 exec(f"args.pretrain_{type_name}_save_path = "
                      f"replace_relative_path(args.pretrain_{type_name}_save_path, args.root)")
-        elif pretrain_type is not None:
+        elif pretrain_type is None:
+            pass
+        else:
             args.pretrain_save_path = replace_relative_path(args.pretrain_save_path, root)
     if not os.path.exists(args.log_save_path):
         os.makedirs(args.log_save_path)
