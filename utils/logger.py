@@ -36,3 +36,6 @@ class MyLogger:
 
     def warning(self, message):
         self.logger.warning(message)
+    
+    def flag(self, message):
+        self.logger.info(f"{'*'*40}{message}{'*'*40}")

@@ -8,6 +8,7 @@
 """
 import torch
 import importlib
+import numpy as np
 
 from utils.options import parser
 from dataset import dataset_info
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     acc_list, nmi_list, ari_list, f1_list = [], [], [], []
     # repeat args.loops rounds
     for i in range(args.loops):
-        logger.info(f"{'=' * 20}Training loop No.{i + 1}{'=' * 20}")
+        logger.flag(f"Training loop No.{i + 1}")
         timer.start()
         # call the training function of your specified model
         result = train(args, data, logger)
@@ -58,17 +59,19 @@ if __name__ == "__main__":
         # record the max value of each loop
         acc_list, nmi_list, ari_list, f1_list = record_metrics(acc_list, nmi_list, ari_list, f1_list,
                                                                result.max_acc_corresponding_metrics)
+        indexes = np.argsort(data.label)
+        sorted_embedding = result.embedding[indexes]
+
         # draw the clustering image or embedding heatmap
         if args.plot_clustering_tsne:
             plot.plot_clustering_tsne(args, result.embedding, data.label,
                                       logger, desc=f"{i}", title=None, axis_show=False)
         if args.plot_embedding_heatmap:
-            plot.plot_embedding_heatmap(args, torch.matmul(result.embedding, result.embedding.t()),
+            plot.plot_embedding_heatmap(args, torch.matmul(sorted_embedding, sorted_embedding.t()),
                                         logger, desc=f"{i}", title=None,
                                         axis_show=False, color_bar_show=True)
-
     logger.info(str(args))
     logger.info("Total loops: {}".format(args.loops))
-    logger.info("Mean value:")
+    logger.flag("Mean value:")
     logger.info(cal_mean_std(acc_list, nmi_list, ari_list, f1_list))
     logger.info("Training over! Punch out!")

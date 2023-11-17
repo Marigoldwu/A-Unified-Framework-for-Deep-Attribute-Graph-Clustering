@@ -26,6 +26,7 @@ def get_path(args):
     :return: Assign path to args and return args
     """
     pretrain_type_list = []
+    single_pretrain_type = ['ae', 'gae', 'lgae', 'tigae', 'igae', 'fgae', 'gat', 'igat', 'fgat', 'lgat']
     # If is pretraining, we can get the pretrain type from model name directly. A big problem is that the type of
     # model pretraining is uncertain, so we should tell the program what pretraining types the model has. Here we use a
     # pretrain_type_dict to store the pretraining types. So, if you want to run your own model, you need to add the
@@ -63,26 +64,19 @@ def get_path(args):
     args.clustering_tsne_save_path = "./img/clustering/" + directory_structure
     args.embedding_heatmap_save_path = "./img/heatmap/" + directory_structure
 
-    if pretrain_type == "pretrain_ae":
-        args.pretrain_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_gae":
-        args.pretrain_save_path = "./pretrain/pretrain_gae/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_igae":
-        args.pretrain_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_gat":
-        args.pretrain_save_path = "./pretrain/pretrain_gat/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_igat":
-        args.pretrain_save_path = "./pretrain/pretrain_igat/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type == "pretrain_both":
-        args.pretrain_ae_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
-        args.pretrain_igae_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
-    elif pretrain_type is None:
+    if pretrain_type is None:
         pass
     elif pretrain_type == "multi":
         pass
+    elif pretrain_type.split('_')[-1] in single_pretrain_type:
+        args.pretrain_save_path = f"./pretrain/{pretrain_type}/" + pretrain_for + "/" + args.dataset_name + "/"
+    elif pretrain_type == "pretrain_both":
+        args.pretrain_ae_save_path = "./pretrain/pretrain_ae/" + pretrain_for + "/" + args.dataset_name + "/"
+        args.pretrain_igae_save_path = "./pretrain/pretrain_igae/" + pretrain_for + "/" + args.dataset_name + "/"
     else:
         print("The pretraining type error!"
               "Please check the pretrain type name or complete the if-elif above with your type!")
+    
     root = args.root
     if root is not None:
         if not os.path.exists(root):
