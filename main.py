@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     # Configuration of logger and timer module.
     # The logger print the training log to the specified file and the timer record training's time assuming.
-    logger = logger.MyLogger(args.model_name, log_file_path=f"{args.log_save_path}{time_manager.get_format_time()}.log")
+    logger = logger.MyLogger(args.model_name, log_file_path=f"{args.log_save_path}{time_manager.get_format_time()}-{args.desc}.log")
     logger.info("The key points of this experiment: " + args.desc)
     logger.info(f"random seed: {args.seed}")
     timer = time_manager.MyTime()
