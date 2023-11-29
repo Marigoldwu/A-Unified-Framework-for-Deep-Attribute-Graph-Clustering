@@ -1,3 +1,7 @@
+<center>
+<img src="./assets/logo.png" />
+</center>
+
 # 🚀 A-Unified-Framework-for-Deep-Attribute-Graph-Clustering
 
 ☞ See the Chinese version in \[[Marigold](https://www.marigold.website/readArticle?workId=145&author=Marigold&authorId=1000001)\]
