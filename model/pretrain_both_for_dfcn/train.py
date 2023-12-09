@@ -75,13 +75,6 @@ def train(args, data, logger):
     label = data.label
     X_pca = numpy_to_torch(X_pca).to(args.device).float()
 
-    with torch.no_grad():
-        _, _, _, z_tilde = model(X_pca, adj)
-
-    kmeans = KMeans(n_clusters=args.clusters, n_init=20)
-    kmeans.fit_predict(z_tilde.data.cpu().numpy())
-    model.cluster_layer.data = torch.tensor(kmeans.cluster_centers_).to(args.device)
-
     acc_max, embedding = 0, 0
     max_acc_corresponding_metrics = [0, 0, 0, 0]
 
