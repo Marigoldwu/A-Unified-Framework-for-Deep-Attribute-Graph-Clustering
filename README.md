@@ -1,6 +1,6 @@
-<center>
-<img src="./assets/logo.png" />
-</center>
+<div align="center">
+  <img src="./assets/logo.png" alt="logo" />
+</div>
 
 # 🚀 A-Unified-Framework-for-Deep-Attribute-Graph-Clustering
 
