@@ -124,11 +124,20 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 
 > :exclamation: **Attention**
 >
-> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. So is DCRN!
+> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pfretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. So is DCRN!
 > 2. The HSAN model does not require pretraining.
 > 3. The results in the DCRN paper have not yet been reproduced, and will continue to be updated in the future.
 >
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
+
+### 🔓 TODO
+| No.  |    Model    |                            Paper                             |                           Analysis                           |                       Source Code                       |
+| :--: | :---------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
+|  1   |  **SCGC**  | [《Simple Contrastive Graph Clustering》](https://arxiv.org/pdf/2205.07865.pdf) | - |      [link](https://github.com/yueliu1999/SCGC)       |
+|  2   |  **Dink-Net**   | [《Dink-Net: Neural Clustering on Large Graphs》](https://arxiv.org/pdf/2305.18405.pdf) | - |         [link](https://github.com/yueliu1999/Dink-Net)         |
+
+
+
 
 ### :robot: ​Commands
 
