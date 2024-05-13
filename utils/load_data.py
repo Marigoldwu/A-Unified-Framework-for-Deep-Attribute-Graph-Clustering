@@ -168,6 +168,8 @@ def load_data(k, dataset_path, dataset_name,
         adj = construct_graph(feature, k, metric_dict[dataset_name])
     # Whether the adj has self-loop, default is True.
     if adj_loop:
+        # delete original self-loop
+        np.fill_diagonal(adj, 0)
         adj = adj + np.eye(adj.shape[0])
     # Whether calculate the matrix M
     M = None
