@@ -343,3 +343,35 @@ Strong scalability is a prominent feature of this framework. If you want to run 
 >
 > If this warehouse is helpful to you, please remember to Star~😘.
 
+## Citation
+
+If you use our code, please cite these papers:
+
+```
+@article{ding2023graph,
+title = {Graph clustering network with structure embedding enhanced},
+journal = {Pattern Recognition},
+volume = {144},
+pages = {109833},
+year = {2023},
+issn = {0031-3203},
+doi = {https://doi.org/10.1016/j.patcog.2023.109833},
+url = {https://www.sciencedirect.com/science/article/pii/S0031320323005319},
+author = {Shifei Ding and Benyu Wu and Xiao Xu and Lili Guo and Ling Ding},
+}
+
+@article{ding2024towards,
+author = {Ding, Shifei and Wu, Benyu and Ding, Ling and Xu, Xiao and Guo, Lili and Liao, Hongmei and Wu, Xindong},
+title = {Towards Faster Deep Graph Clustering via Efficient Graph Auto-Encoder},
+year = {2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+issn = {1556-4681},
+url = {https://doi.org/10.1145/3674983},
+doi = {10.1145/3674983},
+note = {Just Accepted},
+journal = {ACM Trans. Knowl. Discov. Data},
+month = {jun},
+}
+```
+
