@@ -106,34 +106,32 @@ python main.py -M SDCN -D acm -N  -DS Train_SDCN_1_iteration_on_the_ACM_dataset
 
 ### 🔓 Currently Supported Models
 
-| No.  |    Model    |                            Paper                             |                           Analysis                           |                       Source Code                       |
-| :--: | :---------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
-|  1   |  **DAEGC**  | [《Attributed Graph Clustering:  <br> A Deep Attentional Embedding Approach》](https://arxiv.org/pdf/1906.06532.pdf) | [论文阅读02](https://www.marigold.website/readArticle?workId=102&author=Marigold&authorId=1000001) |      [link](https://github.com/Tiger101010/DAEGC)       |
-|  2   |  **SDCN**   | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) | [论文阅读03](https://www.marigold.website/readArticle?workId=103&author=Marigold&authorId=1000001) |         [link](https://github.com/bdy9527/SDCN)         |
-|  3   |  **AGCN**   | [《Attention-driven Graph Clustering Network》](https://arxiv.org/pdf/2108.05499.pdf) | [论文阅读04](https://www.marigold.website/readArticle?workId=105&author=Marigold&authorId=1000001) | [link](https://github.com/ZhihaoPENG-CityU/MM21---AGCN) |
-|  4   | **EFR-DGC** | [《Deep Graph clustering with enhanced <br> feature representations for community detection》](https://link.springer.com/article/10.1007/s10489-022-03381-y) | [论文阅读12](https://www.marigold.website/readArticle?workId=140&author=Marigold&authorId=1000001) |        [link](https://github.com/grcai/DGC-EFR)         |
-|  5   |  **GCAE**   |          :exclamation: ​In fact, it's GAE with GCN.           |                              -                               |                            -                            |
-|  6   |  **DFCN**   | [《Deep Fusion Clustering Network》](https://arxiv.org/pdf/2012.09600.pdf) | [论文阅读09](https://www.marigold.website/readArticle?workId=137&author=Marigold&authorId=1000001) |          [link](https://github.com/WxTu/DFCN)           |
-|  7   |  **HSAN**   | [《Hard Sample Aware Network for <br>Contrastive Deep Graph Clustering》](https://arxiv.org/pdf/2212.08665) |                              -                               |       [link](https://github.com/yueliu1999/HSAN)        |
-|  8   |  **DCRN**   | [《Deep Graph Clustering via<br> Dual Correlation Reduction》](https://ojs.aaai.org/index.php/AAAI/article/view/20726/20485) |                              -                               |       [link](https://github.com/yueliu1999/DCRN)        |
-|  9   |  **CCGC**   | [《Cluster-guided Contrastive <br>Graph Clustering Network》](https://arxiv.org/pdf/2301.01098.pdf) |                              -                               |     [link](https://github.com/xihongyang1999/CCGC)      |
-|  10  | **AGC-DRR** | [《Attributed Graph Clustering <br>with Dual Redundancy Reduction》](https://www.ijcai.org/proceedings/2022/0418.pdf) |                              -                               |       [link](https://github.com/gongleii/AGC-DRR)       |
+| No.  |    Model    |                            Paper                             |                       Source Code                       |
+| :--: | :---------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
+|  1   |  **DAEGC**  | [《Attributed Graph Clustering:  <br> A Deep Attentional Embedding Approach》](https://arxiv.org/pdf/1906.06532.pdf) |      [link](https://github.com/Tiger101010/DAEGC)       |
+|  2   |  **SDCN**   | [《Structural Deep Clustering Network》](https://arxiv.org/pdf/2002.01633.pdf) |         [link](https://github.com/bdy9527/SDCN)         |
+|  3   |  **AGCN**   | [《Attention-driven Graph Clustering Network》](https://arxiv.org/pdf/2108.05499.pdf) | [link](https://github.com/ZhihaoPENG-CityU/MM21---AGCN) |
+|  4   | **EFR-DGC** | [《Deep Graph clustering with enhanced <br> feature representations for community detection》](https://link.springer.com/article/10.1007/s10489-022-03381-y) |        [link](https://github.com/grcai/DGC-EFR)         |
+|  5   |  **GCAE**   |          :exclamation: ​In fact, it's GAE with GCN.           |                            -                            |
+|  6   |  **DFCN**   | [《Deep Fusion Clustering Network》](https://arxiv.org/pdf/2012.09600.pdf) |          [link](https://github.com/WxTu/DFCN)           |
+|  7   |  **HSAN**   | [《Hard Sample Aware Network for <br>Contrastive Deep Graph Clustering》](https://arxiv.org/pdf/2212.08665) |       [link](https://github.com/yueliu1999/HSAN)        |
+|  8   |  **DCRN**   | [《Deep Graph Clustering via<br> Dual Correlation Reduction》](https://ojs.aaai.org/index.php/AAAI/article/view/20726/20485) |       [link](https://github.com/yueliu1999/DCRN)        |
+|  9   |  **CCGC**   | [《Cluster-guided Contrastive <br>Graph Clustering Network》](https://arxiv.org/pdf/2301.01098.pdf) |     [link](https://github.com/xihongyang1999/CCGC)      |
+|  10  | **AGC-DRR** | [《Attributed Graph Clustering <br>with Dual Redundancy Reduction》](https://www.ijcai.org/proceedings/2022/0418.pdf) |       [link](https://github.com/gongleii/AGC-DRR)       |
 
 > :exclamation: **Attention**
 >
-> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pfretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. So is DCRN!
+> 1. The training process of DFCN are divided into three stages according to the paper. First, pretrain pretrain_ae_for_dfcn and pretrain_igae_for_dfcn separately for 30 epochs. Second, pretrain ae and igae simultaneously for 100 epochs which are both integrated into pretrain_both_for_dfcn. Finally, train DFCN formally at least 200 epochs. So is DCRN!
 > 2. The HSAN model does not require pretraining.
 > 3. The results in the DCRN paper have not yet been reproduced, and will continue to be updated in the future.
 >
 > In the future, I plan to update the other models. If you find my framework useful, feel free to contribute to its improvement by submitting your own code.
 
 ### 🔓 TODO
-| No.  |    Model    |                            Paper                             |                           Analysis                           |                       Source Code                       |
-| :--: | :---------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
-|  1   |  **SCGC**  | [《Simple Contrastive Graph Clustering》](https://arxiv.org/pdf/2205.07865.pdf) | - |      [link](https://github.com/yueliu1999/SCGC)       |
-|  2   |  **Dink-Net**   | [《Dink-Net: Neural Clustering on Large Graphs》](https://arxiv.org/pdf/2305.18405.pdf) | - |         [link](https://github.com/yueliu1999/Dink-Net)         |
-
-
+| No.  |    Model    |                            Paper                             |                       Source Code                       |
+| :--: | :---------: | :----------------------------------------------------------: | :-----------------------------------------------------: |
+|  1   |  **SCGC**  | [《Simple Contrastive Graph Clustering》](https://arxiv.org/pdf/2205.07865.pdf) |      [link](https://github.com/yueliu1999/SCGC)       |
+|  2   |  **Dink-Net**   | [《Dink-Net: Neural Clustering on Large Graphs》](https://arxiv.org/pdf/2305.18405.pdf) |         [link](https://github.com/yueliu1999/Dink-Net)         |
 
 
 ### :robot: ​Commands
@@ -338,7 +336,7 @@ Strong scalability is a prominent feature of this framework. If you want to run 
 
 > Graph deep clustering is currently in a stage of rapid development, and more graph clustering methods will be proposed in the future. Therefore, providing a unified code framework can save researchers' coding and experiment time, and put more energy on the theoretical innovation. It is believed that graph clustering will reach a higher level in the future.
 >
-> If this warehouse is helpful to you, please remember to Star~😘.
+> If this repository is helpful to you, please remember to Star~😘.
 
 ## Citation
 
